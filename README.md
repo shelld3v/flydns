@@ -20,12 +20,11 @@ pip install .
 
 # Usage
 
-`# altdns -i subdomains.txt -o data_output -w words.txt -r -s results_output.txt`
+`# altdns -i subdomains.txt -o data_output -w words.txt -s results_output.txt`
 
 - `subdomains.txt` contains the known subdomains for an organization
 - `data_output` is a file that will contain the _massive_ list of altered and permuted subdomains
 - `words.txt` is your list of words that you'd like to permute your current subdomains with (i.e. `admin`, `staging`, `dev`, `qa`) - one word per line
-- the `-r` command resolves each generated, permuted subdomain
 - the `-s` command tells altdns where to save the results of the resolved permuted subdomains. `results_output.txt` will contain the final list of permuted subdomains found that are valid and have a DNS record.
 - the `-t` command limits how many threads the resolver will use simultaneously
 - `-d 1.2.3.4` overrides the system default DNS resolver and will use the specified IP address as the resolving server. Setting this to the authoritative DNS server of the target domain *may* increase resolution performance 
@@ -36,6 +35,6 @@ pip install .
 
 <img src="https://i.imgur.com/Jyfue26.png" width="600px"/>
 
-# Show some love
+# More
 
-This fork is currently in the development of @shelld3v, feel free to request a feature or for help
+This fork is currently in development by @shelld3v, feel free to request a feature!
