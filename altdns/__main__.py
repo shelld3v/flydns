@@ -324,9 +324,6 @@ def main():
     parser.add_argument("-w", "--wordlist",
                         help="List of words to alter the subdomains with",
                         required=False, default="words.txt")
-    parser.add_argument("-r", "--resolve",
-                        help="Resolve all altered subdomains",
-                        action="store_true")
     parser.add_argument("-p", "--ports",
                         help="Scan for ports", required=False)
     parser.add_argument("-n", "--add-number-suffix",
@@ -350,13 +347,12 @@ def main():
 
     args = parser.parse_args()
 
-    if args.resolve:
-        try:
-            resolved_out = open(args.save, "a")
-        except:
-            print("Please provide a file name to save results to "
-                  "via the -s argument")
-            raise SystemExit
+    try:
+        resolved_out = open(args.save, "a")
+    except:
+        print("Please provide a file name to save results to "
+              "via the -s argument")
+        raise SystemExit
 
     alteration_words = get_alteration_words(args.wordlist)
 
@@ -384,49 +380,49 @@ def main():
     else:
         remove_duplicates(args)
 
-    if args.resolve:
-        global progress
-        global linecount
-        global lock
-        global starttime
-        global found
-        global resolverName       
-        lock = Lock()
-        found = {}
-        progress = 0
-        starttime = int(time.time())
-        linecount = get_line_count(args.output)
-        resolverName = args.dnsserver
+    global progress
+    global linecount
+    global lock
+    global starttime
+    global found
+    global resolverName       
+    lock = Lock()
+    found = {}
+    progress = 0
+    starttime = int(time.time())
+    linecount = get_line_count(args.output)
+    resolverName = args.dnsserver
 
-        with open(args.output, "r") as fp:
-            for i in fp:
-                if args.threads:
-                    if len(threadhandler) > int(args.threads):
+    with open(args.output, "r") as fp:
+        for i in fp:
+            if args.threads:
+                if len(threadhandler) > int(args.threads):
 
-                        #Wait until there's only 10 active threads
-                        while len(threadhandler) > 10:
-                           threadhandler.pop().join()
-                try:
-                    t = threading.Thread(
-                        target=get_cname, args=(
-                            args, q, i.strip(), resolved_out))
-                    t.daemon = True
-                    threadhandler.append(t)
-                    t.start()
-                except Exception as error:
-                    print(
-                        colored("[!] Error: {0}".format(error), "red"
-                               )
-                    )
+                    # wait until there's only 10 active threads
+                    while len(threadhandler) > 10:
+                        threadhandler.pop().join()
+            try:
+                t = threading.Thread(
+                    target=get_cname, args=(
+                        args, q, i.strip(), resolved_out))
+                t.daemon = True
+                threadhandler.append(t)
+                t.start()
+            except Exception as error:
+                print(
+                    colored("[!] Error: {0}".format(error),
+                           "red")
+                )
 
-            # wait for threads
-            while len(threadhandler) > 0:
-                threadhandler.pop().join()
+        # wait for threads
+        while len(threadhandler) > 0:
+            threadhandler.pop().join()
                
-        timetaken = str(datetime.timedelta(seconds=(int(time.time())-starttime)))
-        print(
-            colored("[*] Completed in {0}".format(timetaken),
-                    "blue"))
+    timetaken = str(datetime.timedelta(seconds=(int(time.time())-starttime)))
+    print(
+        colored("[*] Completed in {0}".format(timetaken),
+                "blue")
+    )
 
 if __name__ == "__main__":
     main()
