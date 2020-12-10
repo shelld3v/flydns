@@ -452,9 +452,17 @@ def main():
                 )
 
         # wait for threads
-        while len(threadhandler) > 0:
-            threadhandler.pop().join()
-               
+        try:
+            while len(threadhandler) > 0:
+                threadhandler.pop().join()
+        except KeyboardInterrupt:
+                print(
+                    colored("[!] Keyboard Interrupted".format(error),
+                           "red")
+                )
+                threading.Event().set()
+                exit(0)
+
     timetaken = str(datetime.timedelta(seconds=(int(time.time())-starttime)))
     print(
         colored("[*] Completed in {0}".format(timetaken),
