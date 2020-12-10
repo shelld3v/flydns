@@ -259,7 +259,7 @@ def get_cname(args, q, target, resolved_out):
         else:
             ports = []
 
-        if args.moreinfo:
+        if args.whois:
             obj = IPWhois(socket.gethostbyname(final_hostname))
             info = obj.lookup_whois()
         else:
@@ -372,7 +372,7 @@ def main():
     parser.add_argument("-S", "--save",
                         help="File to save resolved altered subdomains to",
                         required=False)
-    parser.add_argument("-m", "--moreinfo",
+    parser.add_argument("-W", "--whois",
                         help="Whois lookup to get more information",
                         action="store_true")
     parser.add_argument("-t", "--threads",
@@ -381,12 +381,12 @@ def main():
 
     args = parser.parse_args()
 
-    if not args.domain and not args.input:
+    if not args.subdomain and not args.input:
         print("No target selected, -h for more information")
         exit(0)
-    elif args.domain:
+    elif args.subdomain:
         tmp = open(".altdns.tmp", "w+")
-        tmp.write(args.domain)
+        tmp.write(args.subdomain)
         tmp.close()
         args.input = ".altdns.tmp"
 
