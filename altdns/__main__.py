@@ -157,8 +157,28 @@ def join_words_subdomains(args, alteration_words):
                         write_domain(args, wp, full_url)
                         current_sub[index] = original_sub
 
+# connect to ports, used by scan_port()
+def port_connect(target, port):
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    sock.settimeout("2.5")
+    try:
+        sock.connect((target, port))
+        return True
+    except:
+        return False
 
-def get_cname(q, target, resolved_out):
+# scanning for open ports
+def scan_ports(args, target):
+    open_ports = []
+    ports = args.ports.split(",")
+    for port in ports:
+        if port_connect(target, port):
+            open_ports.append(port)
+
+    return open_ports
+    
+def get_cname(args, q, target, resolved_out):
     global progress
     global lock
     global starttime
@@ -187,7 +207,7 @@ def get_cname(q, target, resolved_out):
     resolver = dns.resolver.Resolver()
 
     # if a DNS server has been manually specified
-    if(resolverName is not None):
+    if resolverName is not None:
         resolver.nameservers = [resolverName]
     try:
         for rdata in resolver.query(final_hostname, 'CNAME'):
@@ -214,6 +234,13 @@ def get_cname(q, target, resolved_out):
                 found[str(result[1])] = found[str(result[1])] + 1
         else:
             found[str(result[1])] = 1
+
+        # port scan the domain
+        if args.ports:
+            ports = scan_ports(args, result[0])
+        else:
+            ports = []
+
         resolved_out.write(str(result[0]) + ":" + str(result[1]) + "\n")
         resolved_out.flush()
         ext = tldextract.extract(str(result[1]))
@@ -230,8 +257,9 @@ def get_cname(q, target, resolved_out):
                 "red") +
             " : " +
             colored(
-                result[1],
-                "green"))
+                result[1][:-1],
+                "green"),
+            end="")
 
         if len(result) > 2 and result[2]:
             print(
@@ -240,12 +268,23 @@ def get_cname(q, target, resolved_out):
                     "red") +
                 " : " +
                 colored(
-                    result[1],
+                    result[1][:-1],
                     "green") +
                 ": " +
                 colored(
                     result[2],
-                    "blue"))
+                    "blue"),
+                end="")
+
+        if ports:
+            print(
+                colored(
+                    ",".join(ports)
+                    )
+            )
+        else:
+            print()
+
     q.put(result)
 
 def remove_duplicates(args):
@@ -286,6 +325,9 @@ def main():
     parser.add_argument("-r", "--resolve",
                         help="Resolve all altered subdomains",
                         action="store_true")
+    parser.add_argument("-p", "--ports",
+                        help="Scan for ports",
+                        , required=False)
     parser.add_argument("-n", "--add-number-suffix",
                         help="Add number suffix to every domain (0-9)",
                         action="store_true")
@@ -319,9 +361,9 @@ def main():
 
     # if we should remove existing, save the output to a temporary file
     if args.ignore_existing is True:
-      args.output_tmp = args.output + '.tmp'
+        args.output_tmp = args.output + '.tmp'
     else:
-      args.output_tmp = args.output
+        args.output_tmp = args.output
 
     # wipe the output before, so we fresh alternated data
     open(args.output_tmp, 'w').close()
@@ -366,7 +408,7 @@ def main():
                 try:
                     t = threading.Thread(
                         target=get_cname, args=(
-                            q, i.strip(), resolved_out))
+                            args, q, i.strip(), resolved_out))
                     t.daemon = True
                     threadhandler.append(t)
                     t.start()
