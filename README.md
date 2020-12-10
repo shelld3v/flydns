@@ -34,4 +34,4 @@ Further information on attack methodology and this tool release can be found her
 
 # Show some love
 
-If this tool was useful at all to you during DNS recon stages - we'd love to know. Any suggestions or ideas for this tool are welcome - just tweet [@infosec_au](https://twitter.com/infosec_au) or [@nnwakelam](https://twitter.com/nnwakelam) and we'll work on it.
+This fork is currently in the development of @shelld3v, feel free to request a feature or for help
