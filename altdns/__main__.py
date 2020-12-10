@@ -24,7 +24,7 @@ filterwarnings(action="ignore")
 
 banner = "="*70 + "\n"
 banner += "Altdns                                       Re-developed by @shelld3v\n"
-banner += "="*70 + "\n"
+banner += "="*70
 
 def get_alteration_words(wordlist_fname):
     with open(wordlist_fname, "r") as f:
@@ -310,12 +310,12 @@ def get_cname(args, q, target, resolved_out):
 
         if info:
             try:
-                print("  | {0}".format(info["asn_description"]))
-                print("  | ASN:     {0}".format(info["asn"]))
-                print("  | CIDR:    {0}".format(info["asn_cidr"]))
-                print("  | Date:    {0}".format(info["asn_date"]))
-                print("  | Country: {0}".format(info["asn_country_code"]))
-                print("  | Emails:  {0}".format(", ".join(info["nets"]["email"])))
+                print(colored("  | {0}".format(info["asn_description"]), "yellow"))
+                print(colored("  | ASN:     {0}".format(info["asn"]), "yellow"))
+                print(colored("  | CIDR:    {0}".format(info["asn_cidr"]), "yellow"))
+                print(colored("  | Date:    {0}".format(info["asn_date"]), "yellow"))
+                print(colored("  | Country: {0}".format(info["asn_country_code"]), "yellow"))
+                print(colored("  | Emails:  {0}".format(", ".join(info["nets"]["emails"])), "yellow"))
             except:
                 pass
 
