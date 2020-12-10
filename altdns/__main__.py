@@ -215,6 +215,8 @@ def get_cname(args, q, target, resolved_out):
     result = list()
     result.append(target)
     resolver = dns.resolver.Resolver()
+    resolver.timeout = 1
+    resolver.lifetime = 1
 
     # if a DNS server has been manually specified
     if resolverName:
