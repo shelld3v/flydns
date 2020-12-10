@@ -22,6 +22,7 @@
 2017
 2018
 2019
+2020
 3
 4
 5
@@ -35,10 +36,10 @@ accept
 access
 accounts
 ad
-ads
 admin
 admin1
 administrator
+ads
 akamai
 alpha
 alt
@@ -49,6 +50,8 @@ api1
 apollo
 app
 apps
+assistant
+aud
 auth
 aws
 b
@@ -63,6 +66,7 @@ c
 cdn
 cf
 chat
+checkout
 chef
 ci
 client
@@ -73,11 +77,14 @@ cms1
 cn
 com
 container
+content
 control
 corp
 corporate
 cp
 data
+de
+deals
 dec
 demo
 dev
@@ -94,6 +101,7 @@ docs
 download
 drop
 edge
+edit
 elb
 email
 en
@@ -114,19 +122,21 @@ gh
 git
 github
 global
+graphql
 group
 groups
+help
+hk
 host
 hosting
-hw
 i
 ids
 info
+insights
 int
 intern
 internal
 intranet
-io
 jenkins
 jinx
 kr
@@ -141,9 +151,11 @@ machine
 mail
 manage
 manager
+media
 members
 merch
 mirror
+mobile
 monitor
 monitoring
 na
@@ -158,6 +170,7 @@ northamerica
 nov
 office
 old
+omega
 ops
 org
 origin
@@ -168,6 +181,7 @@ partners
 pass
 pay
 payment
+payments
 pc
 php
 pl
@@ -185,7 +199,9 @@ projects
 promo
 promotion
 proxy
+push
 qa
+qa1
 qa2
 region
 remote
@@ -195,6 +211,7 @@ reset
 restrict
 restricted
 reviews
+router
 s
 s3
 sandbox
@@ -207,7 +224,10 @@ service
 site
 sites
 skins
+south
+southeast
 spring
+src
 ssl
 sso
 staff
@@ -241,7 +261,9 @@ tr
 train
 training
 trial
+tw
 uat
+us
 v1
 v2
 vendor
@@ -254,4 +276,5 @@ w3
 web
 web1
 webapp
+west
 z
