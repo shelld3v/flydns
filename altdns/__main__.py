@@ -14,7 +14,6 @@ from tldextract.tldextract import LOG
 import logging
 from termcolor import colored
 import dns.resolver
-import re
 import os
 
 logging.basicConfig(level=logging.CRITICAL)
