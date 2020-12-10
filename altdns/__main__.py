@@ -25,7 +25,7 @@ def get_alteration_words(wordlist_fname):
 
 # will write to the file if the check returns true
 def write_domain(args, wp, full_url):
-  wp.write(full_url)
+    wp.write(full_url)
 
 # function inserts words at every index of the subdomain
 def insert_all_indexes(args, alteration_words):
@@ -34,11 +34,14 @@ def insert_all_indexes(args, alteration_words):
             for line in fp:
                 ext = tldextract.extract(line.strip())
                 current_sub = ext.subdomain.split(".")
+
                 for word in alteration_words:
                     for index in range(0, len(current_sub)):
                         current_sub.insert(index, word.strip())
+
                         # join the list to make into actual subdomain (aa.bb.cc)
                         actual_sub = ".".join(current_sub)
+
                         # save full URL as line in file
                         full_url = "{0}.{1}.{2}\n".format(
                             actual_sub, ext.domain, ext.suffix)
@@ -49,8 +52,9 @@ def insert_all_indexes(args, alteration_words):
                     actual_sub = ".".join(current_sub)
                     full_url = "{0}.{1}.{2}\n".format(
                         actual_sub, ext.domain, ext.suffix)
+
                     if len(current_sub[0]) > 0:
-                      write_domain(args, wp, full_url)
+                        write_domain(args, wp, full_url)
                     current_sub.pop()
 
 # adds word-NUM and wordNUM to each subdomain at each unique position
@@ -60,13 +64,16 @@ def insert_number_suffix_subdomains(args, alternation_words):
             for line in fp:
                 ext = tldextract.extract(line.strip())
                 current_sub = ext.subdomain.split(".")
+
                 for word in range(0, 10):
                     for index, value in enumerate(current_sub):
                         #add word-NUM
                         original_sub = current_sub[index]
                         current_sub[index] = current_sub[index] + "-" + str(word)
+
                         # join the list to make into actual subdomain (aa.bb.cc)
                         actual_sub = ".".join(current_sub)
+
                         # save full URL as line in file
                         full_url = "{0}.{1}.{2}\n".format(actual_sub, ext.domain, ext.suffix)
                         write_domain(args, wp, full_url)
@@ -75,8 +82,10 @@ def insert_number_suffix_subdomains(args, alternation_words):
                         #add wordNUM
                         original_sub = current_sub[index]
                         current_sub[index] = current_sub[index] + str(word)
+
                         # join the list to make into actual subdomain (aa.bb.cc)
                         actual_sub = ".".join(current_sub)
+
                         # save full URL as line in file
                         full_url = "{0}.{1}.{2}\n".format(actual_sub, ext.domain, ext.suffix)
                         write_domain(args, wp, full_url)
@@ -89,23 +98,28 @@ def insert_dash_subdomains(args, alteration_words):
             for line in fp:
                 ext = tldextract.extract(line.strip())
                 current_sub = ext.subdomain.split(".")
+
                 for word in alteration_words:
                     for index, value in enumerate(current_sub):
                         original_sub = current_sub[index]
                         current_sub[index] = current_sub[
                             index] + "-" + word.strip()
+
                         # join the list to make into actual subdomain (aa.bb.cc)
                         actual_sub = ".".join(current_sub)
+
                         # save full URL as line in file
                         full_url = "{0}.{1}.{2}\n".format(
                             actual_sub, ext.domain, ext.suffix)
                         if len(current_sub[0]) > 0 and actual_sub[:1] != "-":
                             write_domain(args, wp, full_url)
                         current_sub[index] = original_sub
+
                         # second dash alteration
                         current_sub[index] = word.strip() + "-" + \
                             current_sub[index]
                         actual_sub = ".".join(current_sub)
+
                         # save second full URL as line in file
                         full_url = "{0}.{1}.{2}\n".format(
                             actual_sub, ext.domain, ext.suffix)
@@ -124,16 +138,20 @@ def join_words_subdomains(args, alteration_words):
                     for index, value in enumerate(current_sub):
                         original_sub = current_sub[index]
                         current_sub[index] = current_sub[index] + word.strip()
+
                         # join the list to make into actual subdomain (aa.bb.cc)
                         actual_sub = ".".join(current_sub)
+
                         # save full URL as line in file
                         full_url = "{0}.{1}.{2}\n".format(
                             actual_sub, ext.domain, ext.suffix)
                         write_domain(args, wp, full_url)
                         current_sub[index] = original_sub
+
                         # second dash alteration
                         current_sub[index] = word.strip() + current_sub[index]
                         actual_sub = ".".join(current_sub)
+
                         # save second full URL as line in file
                         full_url = "{0}.{1}.{2}\n".format(
                             actual_sub, ext.domain, ext.suffix)
@@ -150,6 +168,7 @@ def get_cname(q, target, resolved_out):
     lock.acquire()
     progress += 1
     lock.release()
+
     if progress % 500 == 0:
         lock.acquire()
         left = linecount-progress
@@ -160,28 +179,35 @@ def get_cname(q, target, resolved_out):
         timeleft = str(datetime.timedelta(seconds=seconds))
         print(
             colored("[*] {0}/{1} completed, approx {2} left".format(progress, linecount, timeleft),
-                    "blue"))
+                    "blue")
+        )
+
     final_hostname = target
     result = list()
     result.append(target)
     resolver = dns.resolver.Resolver()
-    if(resolverName is not None): #if a DNS server has been manually specified
+
+    # if a DNS server has been manually specified
+    if(resolverName is not None):
         resolver.nameservers = [resolverName]
     try:
-      for rdata in resolver.query(final_hostname, 'CNAME'):
-        result.append(rdata.target)
+        for rdata in resolver.query(final_hostname, 'CNAME'):
+            result.append(rdata.target)
     except:
         pass
+
     if len(result) == 1:
-      try:
-        A = resolver.query(final_hostname, "A")
-        if len(A) > 0:
-          result = list()
-          result.append(final_hostname)
-          result.append(str(A[0]))
-      except:
-        pass
-    if len(result) > 1: #will always have 1 item (target)
+        try:
+            A = resolver.query(final_hostname, "A")
+            if len(A) > 0:
+                result = list()
+                result.append(final_hostname)
+                result.append(str(A[0]))
+        except:
+            pass
+
+    # will always have 1 item (target)
+    if len(result) > 1:
         if str(result[1]) in found:
             if found[str(result[1])] > 3:
                 return
@@ -192,6 +218,7 @@ def get_cname(q, target, resolved_out):
         resolved_out.write(str(result[0]) + ":" + str(result[1]) + "\n")
         resolved_out.flush()
         ext = tldextract.extract(str(result[1]))
+
         if ext.domain == "amazonaws":
             try:
                 for rdata in resolver.query(result[1], 'CNAME'):
@@ -206,6 +233,7 @@ def get_cname(q, target, resolved_out):
             colored(
                 result[1],
                 "green"))
+
         if len(result) > 2 and result[2]:
             print(
                 colored(
@@ -222,20 +250,20 @@ def get_cname(q, target, resolved_out):
     q.put(result)
 
 def remove_duplicates(args):
-  with open(args.output) as b:
-    blines = set(b)
-    with open(args.output, 'w') as result:
-      for line in blines:
-        result.write(line)
+    with open(args.output) as b:
+        blines = set(b)
+        with open(args.output, 'w') as result:
+            for line in blines:
+            result.write(line)
 
 def remove_existing(args):
-  with open(args.input) as b:
-    blines = set(b)
-  with open(args.output_tmp) as a:
-    with open(args.output, 'w') as result:
-      for line in a:
-        if line not in blines:
-          result.write(line)
+    with open(args.input) as b:
+        blines = set(b)
+    with open(args.output_tmp) as a:
+        with open(args.output, 'w') as result:
+            for line in a:
+                if line not in blines:
+                    result.write(line)
   os.remove(args.output_tmp)
 
 def get_line_count(filename):
@@ -301,8 +329,9 @@ def main():
 
     insert_all_indexes(args, alteration_words)
     insert_dash_subdomains(args, alteration_words)
+
     if args.add_number_suffix is True:
-      insert_number_suffix_subdomains(args, alteration_words)
+        insert_number_suffix_subdomains(args, alteration_words)
     join_words_subdomains(args, alteration_words)
 
     threadhandler = []
@@ -326,10 +355,12 @@ def main():
         starttime = int(time.time())
         linecount = get_line_count(args.output)
         resolverName = args.dnsserver
+
         with open(args.output, "r") as fp:
             for i in fp:
                 if args.threads:
                     if len(threadhandler) > int(args.threads):
+
                         #Wait until there's only 10 active threads
                         while len(threadhandler) > 10:
                            threadhandler.pop().join()
@@ -342,9 +373,10 @@ def main():
                     t.start()
                 except Exception as error:
                     print("error:"),(error)
+
             #Wait for threads
             while len(threadhandler) > 0:
-               threadhandler.pop().join()
+                threadhandler.pop().join()
                
         timetaken = str(datetime.timedelta(seconds=(int(time.time())-starttime)))
         print(
