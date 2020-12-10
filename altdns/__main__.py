@@ -221,10 +221,10 @@ def get_cname(args, q, target, resolved_out):
     try:
         for rdata in resolver.query(final_hostname, 'CNAME'):
             result.append("CNAME " + rdata.target)
-    except dns.resolver.NoAnswer:
-        pass
     except dns.resolver.NXDOMAIN:
         return
+    except:
+        pass
 
     if len(result) == 1:
         try:
