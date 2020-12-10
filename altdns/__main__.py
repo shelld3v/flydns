@@ -23,7 +23,7 @@ logging.basicConfig(level=logging.CRITICAL)
 filterwarnings(action="ignore")
 
 banner = "="*70 + "\n"
-banner += "Altdns                              https://github.com/shelld3v/altdns\n"
+banner += "Flydns v0.1                         https://github.com/shelld3v/flydns\n"
 banner += "="*70
 
 def get_alteration_words(wordlist_fname):
@@ -348,7 +348,7 @@ def get_line_count(filename):
 def main():
     q = Queue()
 
-    parser = argparse.ArgumentParser(description="Altdns by @shelld3v")
+    parser = argparse.ArgumentParser(description="Flydns v0.1")
     parser.add_argument("-s", "--subdomain",
                         help="Single subdomain", required=False)
     parser.add_argument("-i", "--input",
@@ -385,10 +385,10 @@ def main():
         print("No target selected, -h for more information")
         exit(0)
     elif args.subdomain:
-        tmp = open(".altdns.tmp", "w+")
+        tmp = open(".flydns.tmp", "w+")
         tmp.write(args.subdomain)
         tmp.close()
-        args.input = ".altdns.tmp"
+        args.input = ".flydns.tmp"
 
     try:
         resolved_out = open(args.save, "a")
