@@ -23,7 +23,7 @@ logging.basicConfig(level=logging.CRITICAL)
 filterwarnings(action="ignore")
 
 banner = "="*70 + "\n"
-banner += "Altdns                                       Re-developed by @shelld3v\n"
+banner += "Altdns                              https://github.com/shelld3v/altdns\n"
 banner += "="*70
 
 def get_alteration_words(wordlist_fname):
@@ -347,7 +347,7 @@ def get_line_count(filename):
 def main():
     q = Queue()
 
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description="Altdns by @shelld3v")
     parser.add_argument("-i", "--input",
                         help="List of subdomains input", required=True)
     parser.add_argument("-o", "--output",
