@@ -349,8 +349,10 @@ def main():
     q = Queue()
 
     parser = argparse.ArgumentParser(description="Altdns by @shelld3v")
+    parser.add_argument("-n", "--domain",
+                        help="Single subdomain", required=False)
     parser.add_argument("-i", "--input",
-                        help="List of subdomains input", required=True)
+                        help="List of subdomains", required=False)
     parser.add_argument("-o", "--output",
                         help="Output location for altered subdomains",
                         required=True)
@@ -378,6 +380,15 @@ def main():
                     required=False, default="30")
 
     args = parser.parse_args()
+
+    if not args.domain and not args.input:
+        print("No target selected, -h for more information")
+        exit(0)
+    elif args.domain:
+        tmp = open(".altdns.tmp", "w+")
+        tmp.write(args.domain)
+        tmp.close()
+        args.input = ".altdns.tmp"
 
     try:
         resolved_out = open(args.save, "a")
