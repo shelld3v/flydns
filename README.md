@@ -12,7 +12,11 @@ Further information on attack methodology and this tool release can be found her
 
 # Installation
 
-`pip install py-altdns`
+```
+git clone https://github.com/shelld3v/altdns.git
+cd altdns
+pip install .
+```
 
 # Usage
 
