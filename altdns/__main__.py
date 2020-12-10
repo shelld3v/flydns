@@ -19,6 +19,10 @@ import os
 
 logging.basicConfig(level=logging.CRITICAL)
 
+banner = "="*70 + "\n"
+banner += "Altdns                                       Re-developed by @shelld3v\n"
+banner += "="*70 + "\n"
+
 def get_alteration_words(wordlist_fname):
     with open(wordlist_fname, "r") as f:
         return f.readlines()
@@ -386,6 +390,8 @@ def main():
         remove_existing(args)
     else:
         remove_duplicates(args)
+
+    print(colored(banner, "blue"))
 
     global progress
     global linecount
