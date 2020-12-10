@@ -10,7 +10,7 @@ Further information on attack methodology and this tool release can be found her
 
 ## What is flydns
 
-Flydns if a fork from altdns. Basically, Altdns just a tool to generate new subdomains from patterns in the given subdomains. But, I decided to update it into a real advanced subdomains tools, with more great techniques. And evenwhat, the main purpose of this tool is: find subdomains related to given subdomains
+Flydns if a fork from altdns. Basically, Altdns just a tool to generate new subdomains from patterns in the given subdomains. But, I decided to update it into a real advanced recon tool, with more techniques. And evenwhat, the main purpose of this tool is: finding subdomains related to given subdomains
 
 ## Installation
 
