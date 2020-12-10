@@ -254,7 +254,7 @@ def remove_duplicates(args):
         blines = set(b)
         with open(args.output, 'w') as result:
             for line in blines:
-            result.write(line)
+                result.write(line)
 
 def remove_existing(args):
     with open(args.input) as b:
@@ -372,9 +372,12 @@ def main():
                     threadhandler.append(t)
                     t.start()
                 except Exception as error:
-                    print("error:"),(error)
+                    print(
+                        colored("[!] Error: {0}".format(error), "red"
+                               )
+                    )
 
-            #Wait for threads
+            # wait for threads
             while len(threadhandler) > 0:
                 threadhandler.pop().join()
                
