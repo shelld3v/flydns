@@ -213,7 +213,7 @@ def get_cname(args, q, target, resolved_out):
         resolver.nameservers = [resolverName]
     try:
         for rdata in resolver.query(final_hostname, 'CNAME'):
-            result.append(rdata.target)
+            result.append("CNAME " + rdata.target)
     except:
         pass
 
@@ -223,7 +223,7 @@ def get_cname(args, q, target, resolved_out):
             if len(A) > 0:
                 result = list()
                 result.append(final_hostname)
-                result.append(str(A[0]))
+                result.append("A " + str(A[0]))
         except:
             pass
 
@@ -281,7 +281,7 @@ def get_cname(args, q, target, resolved_out):
         if ports:
             print(
                 colored(
-                    " " + ",".join(ports),
+                    " (" + ", ".join(ports) + ")",
                     "yellow")
             )
         else:
