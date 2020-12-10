@@ -264,7 +264,7 @@ def remove_existing(args):
             for line in a:
                 if line not in blines:
                     result.write(line)
-  os.remove(args.output_tmp)
+    os.remove(args.output_tmp)
 
 def get_line_count(filename):
     with open(filename, "r") as lc:
@@ -338,9 +338,9 @@ def main():
 
     # Removes already existing + dupes from output
     if args.ignore_existing is True:
-      remove_existing(args)
+        remove_existing(args)
     else:
-      remove_duplicates(args)
+        remove_duplicates(args)
 
     if args.resolve:
         global progress
