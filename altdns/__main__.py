@@ -214,9 +214,6 @@ def get_cname(args, q, target, resolved_out):
     final_hostname = target
     result = list()
     result.append(target)
-    resolver = dns.resolver.Resolver()
-    resolver.timeout = 1
-    resolver.lifetime = 1
 
     # if a DNS server has been manually specified
     if resolverName:
@@ -420,13 +417,18 @@ def main():
     global lock
     global starttime
     global found
-    global resolverName       
+    global resolverName
+    global resolver
+
     lock = Lock()
     found = {}
     progress = 0
     starttime = int(time.time())
     linecount = get_line_count(args.output)
     resolverName = args.dnsserver
+    resolver = dns.resolver.Resolver()
+    resolver.timeout = 1
+    resolver.lifetime = 1
 
     with open(args.output, "r") as fp:
         for i in fp:
