@@ -374,16 +374,15 @@ def main():
                         help="Whois lookup to get more information",
                         action="store_true")
     parser.add_argument("-t", "--threads",
-                    help="Amount of threads to run simultaneously",
-                    required=False, default="0")
+                    help="Amount of threads to run simultaneously (Default: 30)",
+                    required=False, default="30")
 
     args = parser.parse_args()
 
     try:
         resolved_out = open(args.save, "a")
     except:
-        print("Please provide a file name to save results to "
-              "via the -s argument")
+        print("Please provide a file name to save results to via the -s argument")
         raise SystemExit
 
     alteration_words = get_alteration_words(args.wordlist)
