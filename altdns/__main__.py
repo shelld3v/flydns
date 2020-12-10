@@ -315,7 +315,7 @@ def get_cname(args, q, target, resolved_out):
                 print(colored("  | CIDR:    {0}".format(info["asn_cidr"]), "yellow"))
                 print(colored("  | Date:    {0}".format(info["asn_date"]), "yellow"))
                 print(colored("  | Country: {0}".format(info["asn_country_code"]), "yellow"))
-                print(colored("  | Emails:  {0}".format(", ".join(info["nets"]["emails"])), "yellow"))
+                print(colored("  | Emails:  {0}".format(", ".join(info["nets"][0]["emails"])), "yellow"))
             except:
                 pass
 
