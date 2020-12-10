@@ -6,6 +6,7 @@ import argparse
 import threading
 import time
 import datetime
+import socket
 from threading import Lock
 from queue import Queue as Queue
 
@@ -326,8 +327,7 @@ def main():
                         help="Resolve all altered subdomains",
                         action="store_true")
     parser.add_argument("-p", "--ports",
-                        help="Scan for ports",
-                        , required=False)
+                        help="Scan for ports", required=False)
     parser.add_argument("-n", "--add-number-suffix",
                         help="Add number suffix to every domain (0-9)",
                         action="store_true")
