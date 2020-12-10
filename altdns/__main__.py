@@ -162,9 +162,10 @@ def join_words_subdomains(args, alteration_words):
 def port_connect(target, port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    sock.settimeout("2.5")
+    sock.settimeout(2.5)
     try:
-        sock.connect((target, port))
+        sock.connect((target, int(port)))
+        sock.close()
         return True
     except:
         return False
@@ -178,7 +179,7 @@ def scan_ports(args, target):
             open_ports.append(port)
 
     return open_ports
-    
+
 def get_cname(args, q, target, resolved_out):
     global progress
     global lock
@@ -258,7 +259,7 @@ def get_cname(args, q, target, resolved_out):
                 "red") +
             " : " +
             colored(
-                result[1][:-1],
+                result[1],
                 "green"),
             end="")
 
@@ -269,7 +270,7 @@ def get_cname(args, q, target, resolved_out):
                     "red") +
                 " : " +
                 colored(
-                    result[1][:-1],
+                    result[1],
                     "green") +
                 ": " +
                 colored(
@@ -280,8 +281,8 @@ def get_cname(args, q, target, resolved_out):
         if ports:
             print(
                 colored(
-                    ",".join(ports)
-                    )
+                    " " + ",".join(ports),
+                    "yellow")
             )
         else:
             print()
