@@ -209,7 +209,7 @@ def get_cname(args, q, target, resolved_out):
     resolver = dns.resolver.Resolver()
 
     # if a DNS server has been manually specified
-    if resolverName is not None:
+    if resolverName:
         resolver.nameservers = [resolverName]
     try:
         for rdata in resolver.query(final_hostname, 'CNAME'):
@@ -219,11 +219,18 @@ def get_cname(args, q, target, resolved_out):
 
     if len(result) == 1:
         try:
-            A = resolver.query(final_hostname, "A")
-            if len(A) > 0:
+            if resolverName:
+                A = resolver.query(final_hostname, "A")
+                if len(A) > 0:
+                    result = list()
+                    result.append(final_hostname)
+                    result.append("A " + str(A[0]))
+            else:
+                A = socket.gethostbyname(final_hostname)
                 result = list()
                 result.append(final_hostname)
-                result.append("A " + str(A[0]))
+                result.append("A " + A)
+
         except:
             pass
 
