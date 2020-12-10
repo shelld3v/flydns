@@ -10,7 +10,7 @@ Further information on attack methodology and this tool release can be found her
 
 ## What is flydns
 
-Flydns if a fork from altdns. But, I decided to update it in my project, with more advanced techniques. This is more than just a recon tool to find subdomains with patterns, it also has other features, but *alterations and permutations* are still one of the important part.
+Flydns if a fork from altdns. But, I decided to update it in my project, with more advanced techniques. This is more than just a recon tool to find subdomains with patterns, it also has other features, but *alterations and permutations* are still one of the important parts.
 
 ## Installation
 
