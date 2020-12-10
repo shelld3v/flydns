@@ -349,7 +349,7 @@ def main():
     q = Queue()
 
     parser = argparse.ArgumentParser(description="Altdns by @shelld3v")
-    parser.add_argument("-n", "--domain",
+    parser.add_argument("-s", "--subdomain",
                         help="Single subdomain", required=False)
     parser.add_argument("-i", "--input",
                         help="List of subdomains", required=False)
@@ -369,7 +369,7 @@ def main():
     parser.add_argument("-d", "--dnsserver",
                         help="IP address of resolver to use (overrides system default)",
                         required=False)
-    parser.add_argument("-s", "--save",
+    parser.add_argument("-S", "--save",
                         help="File to save resolved altered subdomains to",
                         required=False)
     parser.add_argument("-m", "--moreinfo",
