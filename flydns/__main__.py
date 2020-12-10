@@ -393,7 +393,7 @@ def main():
     try:
         resolved_out = open(args.save, "a")
     except:
-        print("Please provide a file name to save results to via the -s argument")
+        print("Please provide a file name to save results to via the -S argument")
         raise SystemExit
 
     alteration_words = get_alteration_words(args.wordlist)
