@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # released at BSides Canberra by @infosec_au and @nnwakelam
 # updated with <3 by @shelld3v
 
@@ -14,10 +14,13 @@ import tldextract
 from tldextract.tldextract import LOG
 import logging
 from termcolor import colored
+from ipwhois import IPWhois
 import dns.resolver
 import os
+from warnings import filterwarnings
 
 logging.basicConfig(level=logging.CRITICAL)
+filterwarnings(action="ignore")
 
 banner = "="*70 + "\n"
 banner += "Altdns                                       Re-developed by @shelld3v\n"
@@ -184,6 +187,7 @@ def scan_ports(args, target):
 
     return open_ports
 
+# Check if the domain is resolvable or not then do further actions
 def get_cname(args, q, target, resolved_out):
     global progress
     global lock
@@ -254,6 +258,12 @@ def get_cname(args, q, target, resolved_out):
         else:
             ports = []
 
+        if args.moreinfo:
+            obj = IPWhois(socket.gethostbyname(final_hostname))
+            info = obj.lookup_whois()
+        else:
+            info = None
+
         resolved_out.write(str(result[0]) + ":" + str(result[1]) + "\n")
         resolved_out.flush()
         ext = tldextract.extract(str(result[1]))
@@ -298,6 +308,17 @@ def get_cname(args, q, target, resolved_out):
         else:
             print()
 
+        if info:
+            try:
+                print("  | {0}".format(info["asn_description"]))
+                print("  | ASN:     {0}".format(info["asn"]))
+                print("  | CIDR:    {0}".format(info["asn_cidr"]))
+                print("  | Date:    {0}".format(info["asn_date"]))
+                print("  | Country: {0}".format(info["asn_country_code"]))
+                print("  | Emails:  {0}".format(", ".join(info["nets"]["email"])))
+            except:
+                pass
+
     q.put(result)
 
 def remove_duplicates(args):
@@ -341,17 +362,16 @@ def main():
                         help="Add number suffix to every domain (0-9)",
                         action="store_true")
     parser.add_argument("-e", "--ignore-existing",
-                        help="Ignore existing domains in file",
-                        action="store_true")
+                        help="Ignore existing domains in file", action="store_true")
     parser.add_argument("-d", "--dnsserver",
-                        help="IP address of resolver to use (overrides system default)", required=False)
-
-    parser.add_argument(
-        "-s",
-        "--save",
-        help="File to save resolved altered subdomains to",
-        required=False)
-
+                        help="IP address of resolver to use (overrides system default)",
+                        required=False)
+    parser.add_argument("-s", "--save",
+                        help="File to save resolved altered subdomains to",
+                        required=False)
+    parser.add_argument("-m", "--moreinfo",
+                        help="Whois lookup to get more information",
+                        action="store_true")
     parser.add_argument("-t", "--threads",
                     help="Amount of threads to run simultaneously",
                     required=False, default="0")
