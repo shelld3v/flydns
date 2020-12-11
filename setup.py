@@ -5,10 +5,10 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="flydns",
-    version="0.1",
+    version="0.2",
     author="Pham Sy Minh",
-    author_email="sshah@assetnote.io",
-    description="Generates permutations, alterations and mutations of subdomains and then resolves them",
+    author_email="phamminh0227@gmail.com",
+    description="Find related subdomains from subdomains",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/shelld3v/flydns",
