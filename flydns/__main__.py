@@ -22,7 +22,7 @@ from warnings import filterwarnings
 logging.basicConfig(level=logging.CRITICAL)
 filterwarnings(action="ignore")
 
-banner = "="*70 + "\n"
+banner =  "="*70 + "\n"
 banner += "Flydns v0.1                         https://github.com/shelld3v/flydns\n"
 banner += "="*70
 
@@ -180,7 +180,7 @@ def scan_ports(args, target):
     return open_ports
 
 # Check if the domain is resolvable or not then do further actions
-def get_cname(args, q, target, resolved_out):
+def dns_resolve(args, q, target, resolved_out):
     global progress
     global lock
     global starttime
@@ -338,6 +338,15 @@ def get_line_count(filename):
 
 
 def main():
+    global fp
+    global progress
+    global linecount
+    global lock
+    global starttime
+    global found
+    global resolverName
+    global resolver
+
     q = Queue()
 
     parser = argparse.ArgumentParser(description="Flydns v0.1")
@@ -384,6 +393,11 @@ def main():
         args.input = ".flydns.tmp"
 
     try:
+        fp = open(args.input, "r").readlines()
+    except:
+        print("Unable to open {0}".format(args.input))
+
+    try:
         resolved_out = open(args.save, "a")
     except:
         print("Please provide a file name to save results to via the -S argument")
@@ -392,7 +406,7 @@ def main():
     alteration_words = get_alteration_words(args.wordlist)
 
     # if we should remove existing, save the output to a temporary file
-    if args.ignore_existing is True:
+    if args.ignore_existing:
         args.output_tmp = args.output + '.tmp'
     else:
         args.output_tmp = args.output
@@ -403,7 +417,7 @@ def main():
     insert_all_indexes(args, alteration_words)
     insert_dash_subdomains(args, alteration_words)
 
-    if args.add_number_suffix is True:
+    if args.add_number_suffix:
         insert_number_suffix_subdomains(args, alteration_words)
     join_words_subdomains(args, alteration_words)
 
@@ -417,15 +431,6 @@ def main():
 
     print(colored(banner, "blue"))
 
-    global fp
-    global progress
-    global linecount
-    global lock
-    global starttime
-    global found
-    global resolverName
-    global resolver
-
     lock = Lock()
     found = {}
     progress = 0
@@ -436,22 +441,17 @@ def main():
     resolver.timeout = 1
     resolver.lifetime = 1
 
-    try:
-        fp = open(args.input, "r").readlines()
-    except:
-        print("Unable to open {0}".format(args.input))
-
     with open(args.output, "r") as fp:
         for i in fp:
             if args.threads:
                 if len(threadhandler) > int(args.threads):
 
-                    # wait until there's only 10 active threads
+                    # wait until there's only 20 active threads
                     while len(threadhandler) > 20:
                         threadhandler.pop().join()
             try:
                 t = threading.Thread(
-                    target=get_cname, args=(
+                    target=dns_resolve, args=(
                         args, q, i.strip(), resolved_out))
                 t.daemon = True
                 threadhandler.append(t)
