@@ -380,8 +380,8 @@ def main():
     parser.add_argument("-W", "--whois",
                         help="Whois lookup to get more information", action="store_true")
     parser.add_argument("-t", "--threads",
-                        help="Amount of threads to run simultaneously (Default: 40)",
-                        required=False, default="40")
+                        help="Amount of threads to run simultaneously (Default: 50)",
+                        required=False, default="50")
     parser.add_argument("-q", "--quiet",
                         help="Quiet mode", action="store_true")
 
