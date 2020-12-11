@@ -22,9 +22,9 @@ from warnings import filterwarnings
 logging.basicConfig(level=logging.CRITICAL)
 filterwarnings(action="ignore")
 
-banner =  "="*70 + "\n"
-banner += "Flydns v0.1                         https://github.com/shelld3v/flydns\n"
-banner += "="*70
+banner =  colored("="*70 + "\n", "blue")
+banner += colored("Flydns v0.1                         https://github.com/shelld3v/flydns\n", "cyan")
+banner += colored("="*70, "blue")
 
 def get_alteration_words(wordlist_fname):
     with open(wordlist_fname, "r") as f:
@@ -194,7 +194,7 @@ def dns_resolve(args, q, target, resolved_out):
     progress += 1
     lock.release()
 
-    if not args.quiet and progress % 1000 == 0:
+    if not args.quiet and progress % 500 == 0:
         lock.acquire()
         left = linecount-progress
         secondspassed = (int(time.time())-starttime)+1
@@ -438,7 +438,7 @@ def main():
         remove_duplicates(args)
 
     if not args.quiet:
-        print(colored(banner, "blue"))
+        print(banner, "blue")
 
     lock = Lock()
     found = {}
@@ -456,8 +456,17 @@ def main():
                 if len(threadhandler) > int(args.threads):
 
                     # wait until there's only 20 active threads
-                    while len(threadhandler) > 20:
-                        threadhandler.pop().join()
+                    try:
+                        while len(threadhandler) > 20:
+                            threadhandler.pop().join()
+                    except KeyboardInterrupt:
+                        print(
+                            colored("[!] Keyboard Interrupted".format(error),
+                            "red")
+                        )
+                        threading.Event().set()
+                        exit(0)
+
             try:
                 t = threading.Thread(
                     target=dns_resolve, args=(
