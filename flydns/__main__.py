@@ -376,8 +376,8 @@ def main():
                         help="Whois lookup to get more information",
                         action="store_true")
     parser.add_argument("-t", "--threads",
-                    help="Amount of threads to run simultaneously (Default: 30)",
-                    required=False, default="30")
+                    help="Amount of threads to run simultaneously (Default: 40)",
+                    required=False, default="40")
 
     args = parser.parse_args()
 
@@ -448,7 +448,7 @@ def main():
                 if len(threadhandler) > int(args.threads):
 
                     # wait until there's only 10 active threads
-                    while len(threadhandler) > 10:
+                    while len(threadhandler) > 20:
                         threadhandler.pop().join()
             try:
                 t = threading.Thread(
