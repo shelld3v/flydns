@@ -36,154 +36,146 @@ def write_domain(args, wp, full_url):
 
 # function inserts words at every index of the subdomain
 def insert_all_indexes(args, alteration_words):
-    with open(args.input, "r") as fp:
-        with open(args.output_tmp, "a") as wp:
-            for line in fp:
-                ext = tldextract.extract(line.strip())
-                current_sub = ext.subdomain.split(".")
+    with open(args.output_tmp, "a") as wp:
+        for line in fp:
+            ext = tldextract.extract(line.strip())
+            current_sub = ext.subdomain.split(".")
 
-                for word in alteration_words:
-                    for index in range(0, len(current_sub)):
-                        current_sub.insert(index, word.strip())
+            for word in alteration_words:
+                for index in range(0, len(current_sub)):
+                    current_sub.insert(index, word.strip())
 
-                        # join the list to make into actual subdomain (aa.bb.cc)
-                        actual_sub = ".".join(current_sub)
-
-                        # save full URL as line in file
-                        full_url = "{0}.{1}.{2}\n".format(
-                            actual_sub, ext.domain, ext.suffix)
-                        if actual_sub[-1:] != ".":
-                            write_domain(args, wp, full_url)
-                        current_sub.pop(index)
-                    current_sub.append(word.strip())
+                    # join the list to make into actual subdomain (aa.bb.cc)
                     actual_sub = ".".join(current_sub)
+
+                    # save full URL as line in file
                     full_url = "{0}.{1}.{2}\n".format(
                         actual_sub, ext.domain, ext.suffix)
-
-                    if len(current_sub[0]) > 0:
+                    if actual_sub[-1:] != ".":
                         write_domain(args, wp, full_url)
-                    current_sub.pop()
+                    current_sub.pop(index)
+                current_sub.append(word.strip())
+                actual_sub = ".".join(current_sub)
+                full_url = "{0}.{1}.{2}\n".format(
+                    actual_sub, ext.domain, ext.suffix)
+
+                 if len(current_sub[0]) > 0:
+                    write_domain(args, wp, full_url)
+                current_sub.pop()
 
 # adds word-NUM and wordNUM to each subdomain at each unique position
 def insert_number_suffix_subdomains(args, alternation_words):
-    with open(args.input, "r") as fp:
-        with open(args.output_tmp, "a") as wp:
-            for line in fp:
-                ext = tldextract.extract(line.strip())
-                current_sub = ext.subdomain.split(".")
+    with open(args.output_tmp, "a") as wp:
+        for line in fp:
+            ext = tldextract.extract(line.strip())
+            current_sub = ext.subdomain.split(".")
 
-                for word in range(0, 10):
-                    for index, value in enumerate(current_sub):
-                        #add word-NUM
-                        original_sub = current_sub[index]
-                        current_sub[index] = current_sub[index] + "-" + str(word)
+            for word in range(0, 10):
+                for index, value in enumerate(current_sub):
+                    #add word-NUM
+                    original_sub = current_sub[index]
+                    current_sub[index] = current_sub[index] + "-" + str(word)
 
-                        # join the list to make into actual subdomain (aa.bb.cc)
-                        actual_sub = ".".join(current_sub)
+                    # join the list to make into actual subdomain (aa.bb.cc)
+                    actual_sub = ".".join(current_sub)
 
-                        # save full URL as line in file
-                        full_url = "{0}.{1}.{2}\n".format(actual_sub, ext.domain, ext.suffix)
-                        write_domain(args, wp, full_url)
-                        current_sub[index] = original_sub
+                    # save full URL as line in file
+                    full_url = "{0}.{1}.{2}\n".format(actual_sub, ext.domain, ext.suffix)
+                    write_domain(args, wp, full_url)
+                    current_sub[index] = original_sub
 
-                        #add wordNUM
-                        original_sub = current_sub[index]
-                        current_sub[index] = current_sub[index] + str(word)
+                    # add wordNUM
+                    original_sub = current_sub[index]
+                    current_sub[index] = current_sub[index] + str(word)
 
-                        # join the list to make into actual subdomain (aa.bb.cc)
-                        actual_sub = ".".join(current_sub)
+                    # join the list to make into actual subdomain (aa.bb.cc)
+                    actual_sub = ".".join(current_sub)
 
-                        # save full URL as line in file
-                        full_url = "{0}.{1}.{2}\n".format(actual_sub, ext.domain, ext.suffix)
-                        write_domain(args, wp, full_url)
-                        current_sub[index] = original_sub
+                    # save full URL as line in file
+                    full_url = "{0}.{1}.{2}\n".format(actual_sub, ext.domain, ext.suffix)
+                    write_domain(args, wp, full_url)
+                    current_sub[index] = original_sub
 
 # adds word- and -word to each subdomain at each unique position
 def insert_dash_subdomains(args, alteration_words):
-    with open(args.input, "r") as fp:
-        with open(args.output_tmp, "a") as wp:
-            for line in fp:
-                ext = tldextract.extract(line.strip())
-                current_sub = ext.subdomain.split(".")
+    with open(args.output_tmp, "a") as wp:
+        for line in fp:
+            ext = tldextract.extract(line.strip())
+            current_sub = ext.subdomain.split(".")
 
-                for word in alteration_words:
-                    for index, value in enumerate(current_sub):
-                        original_sub = current_sub[index]
-                        current_sub[index] = current_sub[
-                            index] + "-" + word.strip()
+            for word in alteration_words:
+                for index, value in enumerate(current_sub):
+                    original_sub = current_sub[index]
+                    current_sub[index] = current_sub[
+                        index] + "-" + word.strip()
 
-                        # join the list to make into actual subdomain (aa.bb.cc)
-                        actual_sub = ".".join(current_sub)
+                    # join the list to make into actual subdomain (aa.bb.cc)
+                    actual_sub = ".".join(current_sub)
 
-                        # save full URL as line in file
-                        full_url = "{0}.{1}.{2}\n".format(
-                            actual_sub, ext.domain, ext.suffix)
-                        if len(current_sub[0]) > 0 and actual_sub[:1] != "-":
-                            write_domain(args, wp, full_url)
-                        current_sub[index] = original_sub
+                    # save full URL as line in file
+                    full_url = "{0}.{1}.{2}\n".format(
+                        actual_sub, ext.domain, ext.suffix)
+                    if len(current_sub[0]) > 0 and actual_sub[:1] != "-":
+                        write_domain(args, wp, full_url)
+                    current_sub[index] = original_sub
 
-                        # second dash alteration
-                        current_sub[index] = word.strip() + "-" + \
-                            current_sub[index]
-                        actual_sub = ".".join(current_sub)
+                    # second dash alteration
+                    current_sub[index] = word.strip() + "-" + \
+                        current_sub[index]
+                    actual_sub = ".".join(current_sub)
 
-                        # save second full URL as line in file
-                        full_url = "{0}.{1}.{2}\n".format(
-                            actual_sub, ext.domain, ext.suffix)
-                        if actual_sub[-1:] != "-":
-                            write_domain(args, wp, full_url)
-                        current_sub[index] = original_sub
+                    # save second full URL as line in file
+                    full_url = "{0}.{1}.{2}\n".format(
+                        actual_sub, ext.domain, ext.suffix)
+                    if actual_sub[-1:] != "-":
+                        write_domain(args, wp, full_url)
+                    current_sub[index] = original_sub
 
 # adds prefix and suffix word to each subdomain
 def join_words_subdomains(args, alteration_words):
-    with open(args.input, "r") as fp:
-        with open(args.output_tmp, "a") as wp:
-            for line in fp:
-                ext = tldextract.extract(line.strip())
-                current_sub = ext.subdomain.split(".")
-                for word in alteration_words:
-                    for index, value in enumerate(current_sub):
-                        original_sub = current_sub[index]
-                        current_sub[index] = current_sub[index] + word.strip()
+    with open(args.output_tmp, "a") as wp:
+        for line in fp:
+            ext = tldextract.extract(line.strip())
+            current_sub = ext.subdomain.split(".")
+            for word in alteration_words:
+                for index, value in enumerate(current_sub):
+                    original_sub = current_sub[index]
+                    current_sub[index] = current_sub[index] + word.strip()
 
-                        # join the list to make into actual subdomain (aa.bb.cc)
-                        actual_sub = ".".join(current_sub)
+                    # join the list to make into actual subdomain (aa.bb.cc)
+                    actual_sub = ".".join(current_sub)
 
-                        # save full URL as line in file
-                        full_url = "{0}.{1}.{2}\n".format(
-                            actual_sub, ext.domain, ext.suffix)
-                        write_domain(args, wp, full_url)
-                        current_sub[index] = original_sub
+                    # save full URL as line in file
+                    full_url = "{0}.{1}.{2}\n".format(
+                        actual_sub, ext.domain, ext.suffix)
+                    write_domain(args, wp, full_url)
+                    current_sub[index] = original_sub
 
-                        # second dash alteration
-                        current_sub[index] = word.strip() + current_sub[index]
-                        actual_sub = ".".join(current_sub)
+                    # second dash alteration
+                    current_sub[index] = word.strip() + current_sub[index]
+                    actual_sub = ".".join(current_sub)
 
-                        # save second full URL as line in file
-                        full_url = "{0}.{1}.{2}\n".format(
-                            actual_sub, ext.domain, ext.suffix)
-                        write_domain(args, wp, full_url)
-                        current_sub[index] = original_sub
-
-# connect to ports, used by scan_port()
-def port_connect(target, port):
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    sock.settimeout(2.5)
-    try:
-        sock.connect((target, int(port)))
-        sock.close()
-        return True
-    except:
-        return False
+                    # save second full URL as line in file
+                    full_url = "{0}.{1}.{2}\n".format(
+                        actual_sub, ext.domain, ext.suffix)
+                    write_domain(args, wp, full_url)
+                    current_sub[index] = original_sub
 
 # scanning for open ports
 def scan_ports(args, target):
     open_ports = []
     ports = args.ports.split(",")
     for port in ports:
-        if port_connect(target, port):
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        sock.settimeout(2.5)
+
+        try:
+            sock.connect((target, int(port)))
+            sock.close()
             open_ports.append(port)
+        except:
+            pass
 
     return open_ports
 
@@ -349,8 +341,8 @@ def main():
     q = Queue()
 
     parser = argparse.ArgumentParser(description="Flydns v0.1")
-    parser.add_argument("-s", "--subdomain",
-                        help="Single subdomain", required=False)
+    parser.add_argument("-s", "--subdomains",
+                        help="Subdomains (separated by ',')", required=False)
     parser.add_argument("-i", "--input",
                         help="List of subdomains", required=False)
     parser.add_argument("-o", "--output",
@@ -381,12 +373,13 @@ def main():
 
     args = parser.parse_args()
 
-    if not args.subdomain and not args.input:
+    if not args.subdomains and not args.input:
         print("No target selected, -h for more information")
         exit(0)
-    elif args.subdomain:
+    elif args.subdomains:
         tmp = open(".flydns.tmp", "w+")
-        tmp.write(args.subdomain)
+        for subdomain in args.subdomains.split(","):
+            tmp.write(subdomain + "\n")
         tmp.close()
         args.input = ".flydns.tmp"
 
@@ -424,6 +417,7 @@ def main():
 
     print(colored(banner, "blue"))
 
+    global fp
     global progress
     global linecount
     global lock
@@ -441,6 +435,11 @@ def main():
     resolver = dns.resolver.Resolver()
     resolver.timeout = 1
     resolver.lifetime = 1
+
+    try:
+        fp = open(args.input, "r").readlines()
+    except:
+        print("Unable to open {0}".format(args.input))
 
     with open(args.output, "r") as fp:
         for i in fp:
