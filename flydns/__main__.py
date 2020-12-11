@@ -461,8 +461,7 @@ def main():
                             threadhandler.pop().join()
                     except KeyboardInterrupt:
                         print(
-                            colored("[!] Keyboard Interrupted".format(error),
-                            "red")
+                            colored("[!] Keyboard Interrupted", "red")
                         )
                         threading.Event().set()
                         exit(0)
@@ -486,8 +485,7 @@ def main():
                 threadhandler.pop().join()
         except KeyboardInterrupt:
                 print(
-                    colored("[!] Keyboard Interrupted".format(error),
-                           "red")
+                    colored("[!] Keyboard Interrupted", "red")
                 )
                 threading.Event().set()
                 exit(0)
