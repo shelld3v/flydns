@@ -2,7 +2,7 @@
 
 ## What is flydns
 
-Flydns was first a fork of altdns, but then has been updated to become a various recon tool.
+Flydns was first a fork of altdns, but then has been updated to become a separated recon tool.
 
 Flydns will try to find related subdomains from user given subdomains, by generating permutations, mutations, alterations. The alterations came from combinations between wordlist entries and subdomains patterns.
 
