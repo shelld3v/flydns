@@ -29,8 +29,9 @@ banner += colored("="*70, "blue")
 def get_alteration_words(wordlist_fname):
     with open(wordlist_fname, "r") as f:
         words = f.readlines()
-    for line in fp:
-        words.extend(line.strip().split("."))
+    if len(fp) > 1:
+        for line in fp:
+            words.extend(line.strip().split("."))
         
     return list(dict.fromkeys(words))
 
@@ -203,7 +204,7 @@ def dns_resolve(args, q, target, resolved_out):
         seconds = 0 if amountpersecond == 0 else int(left/amountpersecond)
         timeleft = str(datetime.timedelta(seconds=seconds))
         print(
-            colored("[*] {0}/{1} completed, approx {2} left".format(progress, linecount, timeleft),
+            colored("[*] Progress: {0:.2f}, approximate {1} left".format((progress/linecount) * 100, timeleft),
                     "blue")
         )
 
@@ -455,9 +456,9 @@ def main():
             if args.threads:
                 if len(threadhandler) > int(args.threads):
 
-                    # wait until there's only 20 active threads
+                    # wait until there is only half of the threads are alive
                     try:
-                        while len(threadhandler) > 20:
+                        while len(threadhandler) > int(args.threads)/2:
                             threadhandler.pop().join()
                     except KeyboardInterrupt:
                         print(
