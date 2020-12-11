@@ -1,6 +1,6 @@
 # Flydns - Related subdomains discovery tool
 
-## What is flydns
+## What is Flydns
 
 Flydns was first a fork of altdns, but then has been updated to become a separated recon tool.
 
