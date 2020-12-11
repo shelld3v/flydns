@@ -31,7 +31,7 @@ def get_alteration_words(wordlist_fname):
         words = f.readlines()
     for line in fp:
         words.extend(line.strip().split("."))
-        
+
     return list(dict.fromkeys(words))
 
 # will write to the file if the check returns true
@@ -203,7 +203,7 @@ def dns_resolve(args, q, target, resolved_out):
         seconds = 0 if amountpersecond == 0 else int(left/amountpersecond)
         timeleft = str(datetime.timedelta(seconds=seconds))
         print(
-            colored("[*] Progress: {0:.2f}, approximate {1} left".format((progress/linecount) * 100, timeleft),
+            colored("[*] Progress: {0:.2f}%, approximate {1} left".format((progress/linecount) * 100, timeleft),
                     "blue")
         )
 
