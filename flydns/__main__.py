@@ -192,7 +192,6 @@ def dns_resolve(args, q, target, resolved_out):
     global found
     global resolverName
     lock.acquire()
-    progress += 1
     lock.release()
 
     if not args.quiet and progress % 500 == 0:
@@ -320,6 +319,7 @@ def dns_resolve(args, q, target, resolved_out):
                 pass
 
     q.put(result)
+    progress += 1
 
 def remove_duplicates(args):
     with open(args.output) as b:
