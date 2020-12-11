@@ -191,6 +191,7 @@ def dns_resolve(args, q, target, resolved_out):
     global found
     global resolverName
     lock.acquire()
+    progress += 1
     lock.release()
 
     if not args.quiet and progress % 500 == 0:
@@ -318,7 +319,6 @@ def dns_resolve(args, q, target, resolved_out):
                 pass
 
     q.put(result)
-    progress += 1
 
 def remove_duplicates(args):
     with open(args.output) as b:
@@ -336,11 +336,6 @@ def remove_existing(args):
                 if line not in blines:
                     result.write(line)
     os.remove(args.output_tmp)
-
-def get_line_count(filename):
-    with open(filename, "r") as lc:
-        linecount = sum(1 for _ in lc)
-    return linecount
 
 
 def main():
@@ -444,7 +439,7 @@ def main():
     found = {}
     progress = 0
     starttime = int(time.time())
-    linecount = get_line_count(args.output)
+    linecount = len(open(args.output, "r").readlines())
     resolverName = args.dnsserver
     resolver = dns.resolver.Resolver()
     resolver.timeout = 1
