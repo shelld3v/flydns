@@ -29,9 +29,8 @@ banner += colored("="*70, "blue")
 def get_alteration_words(wordlist_fname):
     with open(wordlist_fname, "r") as f:
         words = f.readlines()
-    if len(fp) > 1:
-        for line in fp:
-            words.extend(line.strip().split("."))
+    for line in fp:
+        words.extend(line.strip().split("."))
         
     return list(dict.fromkeys(words))
 
