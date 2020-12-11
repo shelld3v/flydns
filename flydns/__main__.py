@@ -28,7 +28,11 @@ banner += "="*70
 
 def get_alteration_words(wordlist_fname):
     with open(wordlist_fname, "r") as f:
-        return f.readlines()
+        words = f.readlines()
+    for line in fp:
+        words.extend(line.strip().split("."))
+        
+    return list(dict.fromkeys(words))
 
 # will write to the file if the check returns true
 def write_domain(args, wp, full_url):
@@ -420,6 +424,7 @@ def main():
 
     if args.add_number_suffix:
         insert_number_suffix_subdomains(args, alteration_words)
+
     join_words_subdomains(args, alteration_words)
 
     threadhandler = []
