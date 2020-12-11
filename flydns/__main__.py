@@ -190,7 +190,7 @@ def dns_resolve(args, q, target, resolved_out):
     progress += 1
     lock.release()
 
-    if progress % 500 == 0:
+    if not args.quiet and progress % 500 == 0:
         lock.acquire()
         left = linecount-progress
         secondspassed = (int(time.time())-starttime)+1
@@ -374,11 +374,12 @@ def main():
                         help="File to save resolved altered subdomains to",
                         required=False)
     parser.add_argument("-W", "--whois",
-                        help="Whois lookup to get more information",
-                        action="store_true")
+                        help="Whois lookup to get more information", action="store_true")
     parser.add_argument("-t", "--threads",
-                    help="Amount of threads to run simultaneously (Default: 40)",
-                    required=False, default="40")
+                        help="Amount of threads to run simultaneously (Default: 40)",
+                        required=False, default="40")
+    parser.add_argument("-q", "--quiet",
+                        help="Quiet mode", action="store_true")
 
     args = parser.parse_args()
 
@@ -429,7 +430,8 @@ def main():
     else:
         remove_duplicates(args)
 
-    print(colored(banner, "blue"))
+    if not args.quiet:
+        print(colored(banner, "blue"))
 
     lock = Lock()
     found = {}
@@ -474,11 +476,12 @@ def main():
                 threading.Event().set()
                 exit(0)
 
-    timetaken = str(datetime.timedelta(seconds=(int(time.time())-starttime)))
-    print(
-        colored("[*] Completed in {0}".format(timetaken),
+    if not args.quiet:
+        timetaken = str(datetime.timedelta(seconds=(int(time.time())-starttime)))
+        print(
+            colored("[*] Completed in {0}".format(timetaken),
                 "blue")
-    )
+        )
 
 if __name__ == "__main__":
     main()
