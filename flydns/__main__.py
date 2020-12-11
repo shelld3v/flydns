@@ -438,7 +438,7 @@ def main():
         remove_duplicates(args)
 
     if not args.quiet:
-        print(banner, "blue")
+        print(banner)
 
     lock = Lock()
     found = {}
