@@ -16,17 +16,20 @@ pip install .
 
 ## Usage
 
-`# flydns -i subdomains.txt -o output_subdomains.txt -S resolved.txt`
+| Flag | Description
+|------|------------------------------------------------------
+|  -s  | Target subdomains
+|  -i  | Subdomains list from a file
+|  -o  | Output of altered and permuted subdomains.
+|  -w  | Your wordlist.
+|  -S  | Output of resolved subdomains.
+|  -t  | How many threads the resolver will use simultaneously
+|  -d  | System DNS resolver
+|  -p  | Ports to scan
+|  -n  | Add number suffix to every domain (0-9)
+|  -W  | Perform Whois lookup for every resolved subdomains
 
-- `-i`: Subdomains list, you can try `-s` with your subdomains if you don't want to save them into a file.
-- `-o`: Output of altered and permuted subdomains.
-- `-w`: Your wordlist.
-- `-S`: Output of resolved subdomains.
-- `-t`: How many threads the resolver will use simultaneously
-- `-d`: System DNS resolver
-- `-p`: Ports to scan
-- `-n`: Add number suffix to every domain (0-9)
-- `-W`: Perform Whois lookup for every resolved subdomains
+Example: `flydns -i subdomains.txt -o output_subdomains.txt -S resolved_result.txt`
 
 ## More
 
