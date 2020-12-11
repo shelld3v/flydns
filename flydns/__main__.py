@@ -194,7 +194,7 @@ def dns_resolve(args, q, target, resolved_out):
     progress += 1
     lock.release()
 
-    if not args.quiet and progress % 500 == 0:
+    if not args.quiet and progress % 1000 == 0:
         lock.acquire()
         left = linecount-progress
         secondspassed = (int(time.time())-starttime)+1
@@ -216,7 +216,8 @@ def dns_resolve(args, q, target, resolved_out):
         resolver.nameservers = [resolverName]
     try:
         for rdata in resolver.query(final_hostname, 'CNAME'):
-            result.append("CNAME " + rdata.target)
+            result.append(rdata.target)
+            record = "CNAME"
     except dns.resolver.NXDOMAIN:
         return
     except:
@@ -229,12 +230,13 @@ def dns_resolve(args, q, target, resolved_out):
                 if len(A) > 0:
                     result = list()
                     result.append(final_hostname)
-                    result.append("A " + str(A[0]))
+                    result.append(str(A[0]))
             else:
                 A = socket.gethostbyname(final_hostname)
                 result = list()
                 result.append(final_hostname)
-                result.append("A " + A)
+                result.append(A)
+            record = "A"
 
         except:
             pass
@@ -277,7 +279,7 @@ def dns_resolve(args, q, target, resolved_out):
                 "red") +
             " : " +
             colored(
-                result[1],
+                "{0} {1}".format(record, result[1]),
                 "green"),
             end="")
 
@@ -288,7 +290,7 @@ def dns_resolve(args, q, target, resolved_out):
                     "red") +
                 " : " +
                 colored(
-                    result[1],
+                    "{0} {1}".format(record, result[1]),
                     "green") +
                 ": " +
                 colored(
