@@ -31,6 +31,10 @@ pip install .
 
 Example: `flydns -i subdomains.txt -o output_subdomains.txt -S resolved_result.txt`
 
+## DNS servers
+
+If you want to run Flydns with the best performance, you need to have a good DNS server, pass with the `-d` agrument. You can check the list of publicy available DNS servers in `resolvers.txt`.
+
 ## More
 
 This tool is currently in development by @shelld3v, feel free to request a feature!
