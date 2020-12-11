@@ -23,7 +23,7 @@ logging.basicConfig(level=logging.CRITICAL)
 filterwarnings(action="ignore")
 
 banner =  colored("="*70 + "\n", "blue")
-banner += colored("Flydns v0.1                         https://github.com/shelld3v/flydns\n", "cyan")
+banner += colored("Flydns v0.2                         https://github.com/shelld3v/flydns\n", "cyan")
 banner += colored("="*70, "blue")
 
 def get_alteration_words(wordlist_fname):
@@ -350,7 +350,7 @@ def main():
 
     q = Queue()
 
-    parser = argparse.ArgumentParser(description="Flydns v0.1")
+    parser = argparse.ArgumentParser(description="Flydns v0.2")
     parser.add_argument("-s", "--subdomains",
                         help="Subdomains (separated by ',')", required=False)
     parser.add_argument("-i", "--input",
