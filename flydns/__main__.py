@@ -445,45 +445,42 @@ def main():
     resolver.timeout = 1
     resolver.lifetime = 1
 
-    with open(args.output, "r") as fp:
-        for i in fp:
-            if args.threads:
-                if len(threadhandler) > int(args.threads):
+    for i in open(args.output, "r").readlines():
+        if len(threadhandler) > int(args.threads):
 
-                    # wait until there is only half of the threads are alive
-                    try:
-                        while len(threadhandler) > int(args.threads)/2:
-                            threadhandler.pop().join()
-                    except KeyboardInterrupt:
-                        print(
-                            colored("[!] Keyboard Interrupted", "red")
-                        )
-                        threading.Event().set()
-                        exit(0)
-
+            # wait until there is only half of the threads are alive
             try:
-                t = threading.Thread(
-                    target=dns_resolve, args=(
-                        args, q, i.strip(), resolved_out))
-                t.daemon = True
-                threadhandler.append(t)
-                t.start()
-            except Exception as error:
-                print(
-                    colored("[!] Error: {0}".format(error),
-                           "red")
-                )
-
-        # wait for threads
-        try:
-            while len(threadhandler) > 0:
-                threadhandler.pop().join()
-        except KeyboardInterrupt:
+                while len(threadhandler) > int(args.threads)/2:
+                    threadhandler.pop().join()
+            except KeyboardInterrupt:
                 print(
                     colored("[!] Keyboard Interrupted", "red")
                 )
                 threading.Event().set()
                 exit(0)
+
+        try:
+            t = threading.Thread(
+                target=dns_resolve, args=(
+                    args, q, i.strip(), resolved_out))
+            t.daemon = True
+            threadhandler.append(t)
+            t.start()
+        except Exception as error:
+            print(
+                colored("[!] Error: {0}".format(error), "red")
+            )
+
+    # wait for threads
+    try:
+        while len(threadhandler) > 0:
+            threadhandler.pop().join()
+    except KeyboardInterrupt:
+            print(
+                colored("[!] Keyboard Interrupted", "red")
+            )
+            threading.Event().set()
+            exit(0)
 
     if not args.quiet:
         timetaken = str(datetime.timedelta(seconds=(int(time.time())-starttime)))
