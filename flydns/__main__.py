@@ -59,7 +59,7 @@ def insert_all_indexes(args, alteration_words):
                 full_url = "{0}.{1}.{2}\n".format(
                     actual_sub, ext.domain, ext.suffix)
 
-                 if len(current_sub[0]) > 0:
+                if len(current_sub[0]) > 0:
                     write_domain(args, wp, full_url)
                 current_sub.pop()
 
