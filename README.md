@@ -26,6 +26,7 @@ pip install .
 |  -t  | How many threads the resolver will use simultaneously
 |  -r  | Perform discovery recursively
 |  -d  | System DNS resolver
+|  -e  | Exclude subdomains by domain names
 |  -p  | Ports to scan
 |  -a  | Look for only active subdomains
 |  -n  | Add number suffix to every domain (0-9)
