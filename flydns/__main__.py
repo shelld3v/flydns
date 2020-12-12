@@ -382,11 +382,10 @@ def start(args):
     progress = 0
     starttime = int(time.time())
     linecount = len(open(args.output, "r").readlines())
-    resolverNames = args.dnsservers.strip().split(",")
     resolver = dns.resolver.Resolver()
     resolver.timeout = 1
     resolver.lifetime = 1
-    resolver.nameservers = [resolverNames]
+    resolver.nameservers = args.dnsservers.strip().split(",")
 
     for i in open(args.output, "r").readlines():
         if len(threadhandler) > int(args.threads):
