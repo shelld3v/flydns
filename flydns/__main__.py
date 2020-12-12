@@ -199,6 +199,8 @@ def dns_resolve(args, q, target, resolved_out):
     global starttime
     global found
     global resolverName
+    global recursionsubs
+
     lock.acquire()
     progress += 1
     lock.release()
@@ -358,7 +360,7 @@ def start(args, recursion=False):
     global resolver
     global recursionsubs
 
-    if recursionsubs:
+    if recursion:
         print(
             colored("[*] Starting a new process for found subdomains", "blue")
         )
@@ -518,7 +520,7 @@ def main():
     if not args.quiet:
         print(banner)
 
-    start(args, fp)
+    start(args)
 
 if __name__ == "__main__":
     main()
