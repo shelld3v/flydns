@@ -366,7 +366,7 @@ def start(args, recursion=False):
         )
 
     q = Queue()
-    newsubs = []
+    recursionsubs = []
 
     alteration_words = get_alteration_words(args.wordlist)
 
