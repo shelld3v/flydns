@@ -391,7 +391,7 @@ def start(args):
     for i in open(args.output, "r").readlines():
         if len(threadhandler) > int(args.threads):
             try:
-                while len(threadhandler) != 0:
+                while len(threadhandler) > 5:
                     threadhandler.pop().join()
             except KeyboardInterrupt:
                 print(
