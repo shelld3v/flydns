@@ -227,7 +227,7 @@ def dns_resolve(args, q, target, resolved_out):
     except:
         pass
 
-    if len(result) == 1:
+    if len(result) == 1 or args.active:
         try:
             A = resolver.query(final_hostname, "A")
             if len(A) > 0:
@@ -458,7 +458,8 @@ def main():
                         help="Add number suffix to every domain (0-9)",
                         action="store_true")
     parser.add_argument("-e", "--ignore-existing",
-                        help="Ignore existing domains in file", action="store_true")
+                        help="Ignore existing domains in file",
+                        action="store_true")
     parser.add_argument("-d", "--dnsserver",
                         help="IP address of resolver to use (Default: 1.1.1.1)",
                         default="1.1.1.1")
@@ -473,6 +474,9 @@ def main():
     parser.add_argument("-t", "--threads",
                         help="Amount of threads to run simultaneously (Default: 50)",
                         required=False, default="50")
+    parser.add_argument("-a", "--active",
+                        help="Look for only active subdomains",
+                        action="store_true")
     parser.add_argument("-q", "--quiet",
                         help="Quiet mode", action="store_true")
 
