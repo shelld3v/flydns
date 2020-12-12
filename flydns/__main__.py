@@ -22,7 +22,7 @@ logging.basicConfig(level=logging.CRITICAL)
 filterwarnings(action="ignore")
 
 banner =  colored("="*70 + "\n", "blue")
-banner += colored("FlyDNS v0.2                         https://github.com/shelld3v/flydns\n", "cyan")
+banner += colored("FlyDNS v0.3                         https://github.com/shelld3v/flydns\n", "cyan")
 banner += colored("="*70, "blue")
 
 
@@ -439,7 +439,7 @@ def main():
     global total
     global exclude
 
-    parser = argparse.ArgumentParser(description="FlyDNS v0.2")
+    parser = argparse.ArgumentParser(description="FlyDNS v0.3")
     parser.add_argument("-s", "--subdomains",
                         help="Subdomains (separated by commas)", required=False)
     parser.add_argument("-i", "--input",
