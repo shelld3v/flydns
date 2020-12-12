@@ -222,7 +222,7 @@ def dns_resolve(args, q, target, resolved_out):
     result.append(target)
 
     try:
-        for rdata in resolver.query(final_hostname, 'CNAME'):
+        for rdata in resolver.query(final_hostname, "CNAME"):
             result.append(rdata.target)
     except:
         pass
@@ -230,7 +230,7 @@ def dns_resolve(args, q, target, resolved_out):
     if len(result) == 1 or args.active:
         try:
             A = resolver.query(final_hostname, "A")
-            if len(A) > 0:
+            if len(A) > 0 and len(result) == 1:
                 result = list()
                 result.append(final_hostname)
                 result.append(str(A[0]))
@@ -238,7 +238,7 @@ def dns_resolve(args, q, target, resolved_out):
             pass
 
     # will always have 1 item (target)
-    if len(result) > 1:
+    if len(result) > 1 and result[1] not in exclude:
         if str(result[1]) in found:
             if found[str(result[1])] > 3:
                 return
@@ -265,7 +265,7 @@ def dns_resolve(args, q, target, resolved_out):
 
         if ext.domain == "amazonaws":
             try:
-                for rdata in resolver.query(result[1], 'CNAME'):
+                for rdata in resolver.query(result[1], "CNAME"):
                     result.append(rdata.target)
             except:
                 pass
@@ -292,7 +292,7 @@ def dns_resolve(args, q, target, resolved_out):
                 ": " +
                 colored(
                     result[2],
-                    "blue"),
+                    "magenta"),
                 end="")
 
         if ports:
@@ -323,7 +323,7 @@ def dns_resolve(args, q, target, resolved_out):
 def remove_duplicates(args):
     with open(args.output) as b:
         blines = set(b)
-        with open(args.output, 'w') as result:
+        with open(args.output, "w") as result:
             for line in blines:
                 result.write(line)
 
@@ -332,7 +332,7 @@ def remove_existing(args):
     with open(args.input) as b:
         blines = set(b)
     with open(args.output_tmp) as a:
-        with open(args.output, 'w') as result:
+        with open(args.output, "w") as result:
             for line in a:
                 if line not in blines:
                     result.write(line)
@@ -356,12 +356,12 @@ def start(args):
 
     # if we should remove existing, save the output to a temporary file
     if args.ignore_existing:
-        args.output_tmp = args.output + '.tmp'
+        args.output_tmp = args.output + ".tmp"
     else:
         args.output_tmp = args.output
 
     # wipe the output before, so we fresh alternated data
-    open(args.output_tmp, 'w').close()
+    open(args.output_tmp, "w").close()
 
     insert_all_indexes(args, alteration_words)
     insert_dash_subdomains(args, alteration_words)
@@ -440,6 +440,7 @@ def main():
     global fp
     global resolved_out
     global total
+    global exclude
 
     parser = argparse.ArgumentParser(description="FlyDNS v0.2")
     parser.add_argument("-s", "--subdomains",
@@ -452,14 +453,6 @@ def main():
     parser.add_argument("-w", "--wordlist",
                         help="List of words to alter the subdomains with",
                         required=False, default="words.txt")
-    parser.add_argument("-p", "--ports",
-                        help="Scan for ports", required=False)
-    parser.add_argument("-n", "--add-number-suffix",
-                        help="Add number suffix to every domain (0-9)",
-                        action="store_true")
-    parser.add_argument("-e", "--ignore-existing",
-                        help="Ignore existing domains in file",
-                        action="store_true")
     parser.add_argument("-d", "--dnsserver",
                         help="IP address of resolver to use (Default: 1.1.1.1)",
                         default="1.1.1.1")
@@ -474,8 +467,19 @@ def main():
     parser.add_argument("-t", "--threads",
                         help="Amount of threads to run simultaneously (Default: 50)",
                         required=False, default="50")
+    parser.add_argument("-p", "--ports",
+                        help="Scan for ports", required=False)
     parser.add_argument("-a", "--active",
                         help="Look for only active subdomains",
+                        action="store_true")
+    parser.add_argument("-n", "--add-number-suffix",
+                        help="Add number suffix to every domain (0-9)",
+                        action="store_true")
+    parser.add_argument("-e", "--exclude",
+                        help="Exclude subdomains that resolve to this (separated by ',')",
+                        required=False, default="50")
+    parser.add_argument("-I", "--ignore-existing",
+                        help="Ignore existing domains in file",
                         action="store_true")
     parser.add_argument("-q", "--quiet",
                         help="Quiet mode", action="store_true")
@@ -504,6 +508,8 @@ def main():
     except:
         print("Unable to open: {0}".format(args.file))
         raise SystemExit
+
+    exclude = args.exclude.split(",")
 
     if not args.quiet:
         print(banner)
