@@ -31,7 +31,7 @@ pip install .
 |  -n  | Add number suffix to every domain (0-9)
 |  -W  | Perform Whois lookup for every resolved subdomains
 
-Example: `flydns -i subdomains.txt -o output_subdomains.txt -S resolved_result.txt`
+Example: `flydns -i subdomains.txt -o output_subdomains.txt -f resolved_result.txt`
 
 ## More
 
