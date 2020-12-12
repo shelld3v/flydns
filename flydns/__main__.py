@@ -198,13 +198,12 @@ def dns_resolve(args, q, target, resolved_out):
     global starttime
     global found
     global resolverName
-    global recursionsubs
 
     lock.acquire()
     progress += 1
     lock.release()
 
-    if not args.quiet and progress % 500 == 0:
+    if not args.quiet and progress % 600 == 0:
         lock.acquire()
         left = linecount-progress
         secondspassed = (int(time.time())-starttime)+1
@@ -278,8 +277,6 @@ def dns_resolve(args, q, target, resolved_out):
                     result.append(rdata.target)
             except:
                 pass
-        if args.recursion:
-            recursionsubs.append(result[0])
 
         print(
             colored(
@@ -326,6 +323,8 @@ def dns_resolve(args, q, target, resolved_out):
             except:
                 pass
 
+        total.append(result[0])
+
     q.put(result)
 
 
@@ -348,7 +347,7 @@ def remove_existing(args):
     os.remove(args.output_tmp)
 
 
-def start(args, recursion=False):
+def start(args):
     global fp
     global progress
     global linecount
@@ -357,15 +356,8 @@ def start(args, recursion=False):
     global found
     global resolverName
     global resolver
-    global recursionsubs
-
-    if recursion:
-        print(
-            colored("[*] Starting a new discovery process with found subdomains", "blue")
-        )
 
     q = Queue()
-    recursionsubs = []
 
     alteration_words = get_alteration_words(args.wordlist)
 
@@ -439,9 +431,14 @@ def start(args, recursion=False):
             threading.Event().set()
             exit(0)
 
-    if len(recursionsubs):
-        fp = recursionsubs
-        start(args, recursion=True)
+    if args.recursion and len(total):
+        fp = total
+        print(
+            colored(
+                "[*] Starting a new discovery process with found subdomains",
+                "blue")
+        )
+        start(args)
 
     if not args.quiet:
         timetaken = str(datetime.timedelta(seconds=(int(time.time())-starttime)))
@@ -454,6 +451,7 @@ def start(args, recursion=False):
 def main():
     global fp
     global resolved_out
+    global total
 
     parser = argparse.ArgumentParser(description="FlyDNS v0.2")
     parser.add_argument("-s", "--subdomains",
@@ -491,6 +489,7 @@ def main():
                         help="Quiet mode", action="store_true")
 
     args = parser.parse_args()
+    total = []
 
     if not args.subdomains and not args.input:
         print("No target selected, -h for more information")
