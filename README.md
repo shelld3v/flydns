@@ -1,10 +1,10 @@
-# Flydns - Related subdomains discovery tool
+# FlyDNS - Related subdomains discovery tool
 
-## What is Flydns
+## What is FlyDNS
 
-Flydns was first a fork of altdns, but then has been updated to become a separated recon tool.
+FlyDNS was first a fork of Altdns, but then has been updated to become a separated recon tool.
 
-Flydns will try to find related subdomains from user given subdomains, by generating permutations, mutations, alterations. The alterations came from combinations between wordlist entries and subdomains patterns.
+FlyDNS will try to find related subdomains from user given subdomains, by generating permutations, mutations, alterations. The alterations came from combinations between wordlist entries and subdomains patterns.
 
 ## Installation
 
@@ -33,7 +33,7 @@ Example: `flydns -i subdomains.txt -o output_subdomains.txt -S resolved_result.t
 
 ## DNS servers
 
-If you want to run Flydns with the best performance, you need to have a good DNS server, pass with the `-d` agrument. You can check the list of publicy available DNS servers in `resolvers.txt`.
+If you want to run FlyDNS with the best performance, you need to have a good DNS server, pass with the `-d` agrument. You can check the list of publicy available DNS servers in `resolvers.txt`.
 
 ## More
 
