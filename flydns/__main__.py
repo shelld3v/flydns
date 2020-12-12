@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-# released at BSides Canberra by @infosec_au and @nnwakelam
-# updated with <3 by @shelld3v
+# developed with <3 by @shelld3v
 
 import argparse
 import threading
