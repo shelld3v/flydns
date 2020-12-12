@@ -27,6 +27,7 @@ pip install .
 |  -r  | Perform discovery recursively
 |  -d  | System DNS resolver
 |  -p  | Ports to scan
+|  -a  | Look for only active subdomains
 |  -n  | Add number suffix to every domain (0-9)
 |  -W  | Perform Whois lookup for every resolved subdomains
 
