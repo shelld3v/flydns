@@ -362,7 +362,7 @@ def start(args, recursion=False):
 
     if recursion:
         print(
-            colored("[*] Starting a new process for found subdomains", "blue")
+            colored("[*] Starting a new discovery process with found subdomains", "blue")
         )
 
     q = Queue()
@@ -407,10 +407,8 @@ def start(args, recursion=False):
 
     for i in open(args.output, "r").readlines():
         if len(threadhandler) > int(args.threads):
-
-            # wait until there is only half of the threads are alive
             try:
-                while len(threadhandler) > int(args.threads)/10:
+                while len(threadhandler) != 0:
                     threadhandler.pop().join()
             except KeyboardInterrupt:
                 print(
