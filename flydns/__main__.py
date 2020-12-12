@@ -220,9 +220,6 @@ def dns_resolve(args, q, target, resolved_out):
     result = list()
     result.append(target)
 
-    # if a DNS server has been manually specified
-    if resolverName:
-        resolver.nameservers = [resolverName]
     try:
         for rdata in resolver.query(final_hostname, 'CNAME'):
             result.append(rdata.target)
@@ -231,17 +228,11 @@ def dns_resolve(args, q, target, resolved_out):
 
     if len(result) == 1:
         try:
-            if resolverName:
-                A = resolver.query(final_hostname, "A")
-                if len(A) > 0:
-                    result = list()
-                    result.append(final_hostname)
-                    result.append(str(A[0]))
-            else:
-                A = socket.gethostbyname(final_hostname)
+            A = resolver.query(final_hostname, "A")
+            if len(A) > 0:
                 result = list()
                 result.append(final_hostname)
-                result.append(A)
+                result.append(str(A[0]))
         except:
             pass
 
@@ -395,6 +386,7 @@ def start(args):
     resolver = dns.resolver.Resolver()
     resolver.timeout = 1
     resolver.lifetime = 1
+    resolver.nameservers = [resolverName]
 
     for i in open(args.output, "r").readlines():
         if len(threadhandler) > int(args.threads):
@@ -473,8 +465,8 @@ def main():
     parser.add_argument("-e", "--ignore-existing",
                         help="Ignore existing domains in file", action="store_true")
     parser.add_argument("-d", "--dnsserver",
-                        help="IP address of resolver to use (overrides system default)",
-                        required=False)
+                        help="IP address of resolver to use (Default: 8.8.8.8)",
+                        default="8.8.8.8")
     parser.add_argument("-f", "--file",
                         help="File to save resolved altered subdomains to",
                         required=True)
