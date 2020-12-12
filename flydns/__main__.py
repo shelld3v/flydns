@@ -198,6 +198,7 @@ def dns_resolve(args, q, target, resolved_out):
     global starttime
     global found
     global resolverName
+    global total
 
     lock.acquire()
     progress += 1
@@ -347,6 +348,7 @@ def start(args):
     global found
     global resolverName
     global resolver
+    global total
 
     q = Queue()
 
@@ -433,13 +435,6 @@ def start(args):
         )
         start(args)
 
-    if not args.quiet:
-        timetaken = str(datetime.timedelta(seconds=(int(time.time())-starttime)))
-        print(
-            colored("[*] Completed in {0}".format(timetaken),
-                "blue")
-        )
-
 
 def main():
     global fp
@@ -510,6 +505,13 @@ def main():
         print(banner)
 
     start(args)
+
+    if not args.quiet:
+        timetaken = str(datetime.timedelta(seconds=(int(time.time())-starttime)))
+        print(
+            colored("[*] Completed in {0}".format(timetaken),
+                "blue")
+        )
 
 if __name__ == "__main__":
     main()
