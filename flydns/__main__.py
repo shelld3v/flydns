@@ -204,7 +204,7 @@ def dns_resolve(args, q, target, resolved_out):
     progress += 1
     lock.release()
 
-    if not args.quiet and progress % 500 == 0:
+    if not args.quiet and progress % 700 == 0:
         lock.acquire()
         left = linecount-progress
         secondspassed = (int(time.time())-starttime)+1
