@@ -22,8 +22,9 @@ pip install .
 |  -i  | Subdomains list from a file
 |  -o  | Output of altered and permuted subdomains.
 |  -w  | Your wordlist.
-|  -S  | Output of resolved subdomains.
+|  -f  | Output of resolved subdomains.
 |  -t  | How many threads the resolver will use simultaneously
+|  -r  | Perform discovery recursively
 |  -d  | System DNS resolver
 |  -p  | Ports to scan
 |  -n  | Add number suffix to every domain (0-9)
