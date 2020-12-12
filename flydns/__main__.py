@@ -26,6 +26,8 @@ banner =  colored("="*70 + "\n", "blue")
 banner += colored("FlyDNS v0.2                         https://github.com/shelld3v/flydns\n", "cyan")
 banner += colored("="*70, "blue")
 
+
+
 def get_alteration_words(wordlist_fname):
     with open(wordlist_fname, "r") as f:
         words = f.readlines()
@@ -34,9 +36,11 @@ def get_alteration_words(wordlist_fname):
 
     return list(dict.fromkeys(words))
 
+
 # will write to the file if the check returns true
 def write_domain(args, wp, full_url):
     wp.write(full_url)
+
 
 # function inserts words at every index of the subdomain
 def insert_all_indexes(args, alteration_words):
@@ -66,6 +70,7 @@ def insert_all_indexes(args, alteration_words):
                 if len(current_sub[0]) > 0:
                     write_domain(args, wp, full_url)
                 current_sub.pop()
+
 
 # adds word-NUM and wordNUM to each subdomain at each unique position
 def insert_number_suffix_subdomains(args, alternation_words):
@@ -99,6 +104,7 @@ def insert_number_suffix_subdomains(args, alternation_words):
                     full_url = "{0}.{1}.{2}\n".format(actual_sub, ext.domain, ext.suffix)
                     write_domain(args, wp, full_url)
                     current_sub[index] = original_sub
+
 
 # adds word- and -word to each subdomain at each unique position
 def insert_dash_subdomains(args, alteration_words):
@@ -135,6 +141,7 @@ def insert_dash_subdomains(args, alteration_words):
                         write_domain(args, wp, full_url)
                     current_sub[index] = original_sub
 
+
 # adds prefix and suffix word to each subdomain
 def join_words_subdomains(args, alteration_words):
     with open(args.output_tmp, "a") as wp:
@@ -165,6 +172,7 @@ def join_words_subdomains(args, alteration_words):
                     write_domain(args, wp, full_url)
                     current_sub[index] = original_sub
 
+
 # scanning for open ports
 def scan_ports(args, target):
     open_ports = []
@@ -182,6 +190,7 @@ def scan_ports(args, target):
             pass
 
     return open_ports
+
 
 # Check if the domain is resolvable or not then do further actions
 def dns_resolve(args, q, target, resolved_out):
@@ -268,6 +277,9 @@ def dns_resolve(args, q, target, resolved_out):
                     result.append(rdata.target)
             except:
                 pass
+        if args.recursion:
+            recursionsubs.append(result[0])
+
         print(
             colored(
                 result[0],
@@ -315,6 +327,7 @@ def dns_resolve(args, q, target, resolved_out):
 
     q.put(result)
 
+
 def remove_duplicates(args):
     with open(args.output) as b:
         blines = set(b)
@@ -322,6 +335,7 @@ def remove_duplicates(args):
             for line in blines:
                 result.write(line)
 
+      
 def remove_existing(args):
     with open(args.input) as b:
         blines = set(b)
@@ -333,7 +347,7 @@ def remove_existing(args):
     os.remove(args.output_tmp)
 
 
-def main():
+def start(args, recursion=False):
     global fp
     global progress
     global linecount
@@ -342,63 +356,15 @@ def main():
     global found
     global resolverName
     global resolver
+    global recursionsubs
+
+    if recursionsubs:
+        print(
+            colored("[*] Starting a new process for found subdomains", "blue")
+        )
 
     q = Queue()
-
-    parser = argparse.ArgumentParser(description="FlyDNS v0.2")
-    parser.add_argument("-s", "--subdomains",
-                        help="Subdomains (separated by ',')", required=False)
-    parser.add_argument("-i", "--input",
-                        help="List of subdomains", required=False)
-    parser.add_argument("-o", "--output",
-                        help="Output location for altered subdomains",
-                        required=True)
-    parser.add_argument("-w", "--wordlist",
-                        help="List of words to alter the subdomains with",
-                        required=False, default="words.txt")
-    parser.add_argument("-p", "--ports",
-                        help="Scan for ports", required=False)
-    parser.add_argument("-n", "--add-number-suffix",
-                        help="Add number suffix to every domain (0-9)",
-                        action="store_true")
-    parser.add_argument("-e", "--ignore-existing",
-                        help="Ignore existing domains in file", action="store_true")
-    parser.add_argument("-d", "--dnsserver",
-                        help="IP address of resolver to use (overrides system default)",
-                        required=False)
-    parser.add_argument("-S", "--save",
-                        help="File to save resolved altered subdomains to",
-                        required=False)
-    parser.add_argument("-W", "--whois",
-                        help="Whois lookup to get more information", action="store_true")
-    parser.add_argument("-t", "--threads",
-                        help="Amount of threads to run simultaneously (Default: 50)",
-                        required=False, default="50")
-    parser.add_argument("-q", "--quiet",
-                        help="Quiet mode", action="store_true")
-
-    args = parser.parse_args()
-
-    if not args.subdomains and not args.input:
-        print("No target selected, -h for more information")
-        exit(0)
-    elif args.subdomains:
-        tmp = open(".flydns.tmp", "w+")
-        for subdomain in args.subdomains.split(","):
-            tmp.write(subdomain + "\n")
-        tmp.close()
-        args.input = ".flydns.tmp"
-
-    try:
-        fp = open(args.input, "r").readlines()
-    except:
-        print("Unable to open {0}".format(args.input))
-
-    try:
-        resolved_out = open(args.save, "a")
-    except:
-        print("Please provide a file name to save results to via the -S argument")
-        raise SystemExit
+    newsubs = []
 
     alteration_words = get_alteration_words(args.wordlist)
 
@@ -427,9 +393,6 @@ def main():
     else:
         remove_duplicates(args)
 
-    if not args.quiet:
-        print(banner)
-
     lock = Lock()
     found = {}
     progress = 0
@@ -445,7 +408,7 @@ def main():
 
             # wait until there is only half of the threads are alive
             try:
-                while len(threadhandler) > int(args.threads)/2:
+                while len(threadhandler) > int(args.threads)/10:
                     threadhandler.pop().join()
             except KeyboardInterrupt:
                 print(
@@ -477,12 +440,85 @@ def main():
             threading.Event().set()
             exit(0)
 
+    if len(recursionsubs):
+        fp = recursionsubs
+        start(args, recursion=True)
+
     if not args.quiet:
         timetaken = str(datetime.timedelta(seconds=(int(time.time())-starttime)))
         print(
             colored("[*] Completed in {0}".format(timetaken),
                 "blue")
         )
+
+
+def main():
+    global fp
+    global resolved_out
+
+    parser = argparse.ArgumentParser(description="FlyDNS v0.2")
+    parser.add_argument("-s", "--subdomains",
+                        help="Subdomains (separated by ',')", required=False)
+    parser.add_argument("-i", "--input",
+                        help="List of subdomains", required=False)
+    parser.add_argument("-o", "--output",
+                        help="Output location for altered subdomains",
+                        required=True)
+    parser.add_argument("-w", "--wordlist",
+                        help="List of words to alter the subdomains with",
+                        required=False, default="words.txt")
+    parser.add_argument("-p", "--ports",
+                        help="Scan for ports", required=False)
+    parser.add_argument("-n", "--add-number-suffix",
+                        help="Add number suffix to every domain (0-9)",
+                        action="store_true")
+    parser.add_argument("-e", "--ignore-existing",
+                        help="Ignore existing domains in file", action="store_true")
+    parser.add_argument("-d", "--dnsserver",
+                        help="IP address of resolver to use (overrides system default)",
+                        required=False)
+    parser.add_argument("-f", "--file",
+                        help="File to save resolved altered subdomains to",
+                        required=True)
+    parser.add_argument("-r", "--recursion",
+                        help="Run FLyDNS recursively against found subdomains",
+                        action="store_true")
+    parser.add_argument("-W", "--whois",
+                        help="Whois lookup to get more information", action="store_true")
+    parser.add_argument("-t", "--threads",
+                        help="Amount of threads to run simultaneously (Default: 50)",
+                        required=False, default="50")
+    parser.add_argument("-q", "--quiet",
+                        help="Quiet mode", action="store_true")
+
+    args = parser.parse_args()
+
+    if not args.subdomains and not args.input:
+        print("No target selected, -h for more information")
+        exit(0)
+    elif args.subdomains:
+        tmp = open(".flydns.tmp", "w+")
+        for subdomain in args.subdomains.split(","):
+            tmp.write(subdomain + "\n")
+        tmp.close()
+        args.input = ".flydns.tmp"
+
+    try:
+        fp = open(args.input, "r").readlines()
+    except:
+        print("Unable to open {0}".format(args.input))
+        raise SystemExit
+
+    try:
+        resolved_out = open(args.file, "a")
+    except:
+        print("Unable to open: {0}".format(args.file))
+        raise SystemExit
+
+    if not args.quiet:
+        print(banner)
+
+    start(args, fp)
 
 if __name__ == "__main__":
     main()
