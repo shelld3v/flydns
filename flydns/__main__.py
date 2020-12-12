@@ -237,7 +237,7 @@ def dns_resolve(args, q, target, resolved_out):
             pass
 
     # will always have 1 item (target)
-    if len(result) > 1 and result[1] not in exclude:
+    if len(result) > 1 and str(result[1]) not in exclude:
         if str(result[1]) in found:
             if found[str(result[1])] > 3:
                 return
