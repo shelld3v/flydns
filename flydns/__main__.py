@@ -335,7 +335,7 @@ def remove_duplicates(args):
             for line in blines:
                 result.write(line)
 
-      
+
 def remove_existing(args):
     with open(args.input) as b:
         blines = set(b)
@@ -484,8 +484,8 @@ def main():
     parser.add_argument("-W", "--whois",
                         help="Whois lookup to get more information", action="store_true")
     parser.add_argument("-t", "--threads",
-                        help="Amount of threads to run simultaneously (Default: 50)",
-                        required=False, default="50")
+                        help="Amount of threads to run simultaneously (Default: 100)",
+                        required=False, default="100")
     parser.add_argument("-q", "--quiet",
                         help="Quiet mode", action="store_true")
 
