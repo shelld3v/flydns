@@ -197,7 +197,6 @@ def dns_resolve(args, q, target, resolved_out):
     global lock
     global starttime
     global found
-    global resolverName
     global total
 
     lock.acquire()
@@ -346,7 +345,6 @@ def start(args):
     global lock
     global starttime
     global found
-    global resolverName
     global resolver
     global total
 
@@ -374,7 +372,7 @@ def start(args):
     threadhandler = []
 
     # Removes already existing + dupes from output
-    if args.ignore_existing is True:
+    if args.ignore_existing:
         remove_existing(args)
     else:
         remove_duplicates(args)
@@ -384,11 +382,11 @@ def start(args):
     progress = 0
     starttime = int(time.time())
     linecount = len(open(args.output, "r").readlines())
-    resolverName = args.dnsserver
+    resolverNames = args.dnsservers.strip().split(",")
     resolver = dns.resolver.Resolver()
     resolver.timeout = 1
     resolver.lifetime = 1
-    resolver.nameservers = [resolverName]
+    resolver.nameservers = [resolverNames]
 
     for i in open(args.output, "r").readlines():
         if len(threadhandler) > int(args.threads):
@@ -444,7 +442,7 @@ def main():
 
     parser = argparse.ArgumentParser(description="FlyDNS v0.2")
     parser.add_argument("-s", "--subdomains",
-                        help="Subdomains (separated by ',')", required=False)
+                        help="Subdomains (separated by commas)", required=False)
     parser.add_argument("-i", "--input",
                         help="List of subdomains", required=False)
     parser.add_argument("-o", "--output",
@@ -453,8 +451,8 @@ def main():
     parser.add_argument("-w", "--wordlist",
                         help="List of words to alter the subdomains with",
                         required=False, default="words.txt")
-    parser.add_argument("-d", "--dnsserver",
-                        help="IP address of resolver to use (Default: 1.1.1.1)",
+    parser.add_argument("-d", "--dnsservers",
+                        help="IP addresses of resolvers to use, separated by commas (Default: 1.1.1.1)",
                         default="1.1.1.1")
     parser.add_argument("-f", "--file",
                         help="File to save resolved altered subdomains to",
@@ -476,7 +474,7 @@ def main():
                         help="Add number suffix to every domain (0-9)",
                         action="store_true")
     parser.add_argument("-e", "--exclude",
-                        help="Exclude subdomains that resolve to this (separated by ',')",
+                        help="Exclude subdomains that resolve to this (separated by commas)",
                         required=False, default="50")
     parser.add_argument("-I", "--ignore-existing",
                         help="Ignore existing domains in file",
@@ -509,7 +507,7 @@ def main():
         print("Unable to open: {0}".format(args.file))
         raise SystemExit
 
-    exclude = args.exclude.split(",")
+    exclude = args.exclude.strip().split(",")
 
     if not args.quiet:
         print(banner)
