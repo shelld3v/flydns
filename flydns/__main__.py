@@ -478,7 +478,7 @@ def main():
                         help="File to save resolved altered subdomains to",
                         required=True)
     parser.add_argument("-r", "--recursion",
-                        help="Run FLyDNS recursively against found subdomains",
+                        help="Run FLyDNS recursively",
                         action="store_true")
     parser.add_argument("-W", "--whois",
                         help="Whois lookup to get more information", action="store_true")
