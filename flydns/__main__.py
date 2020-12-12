@@ -433,6 +433,7 @@ def start(args):
 
     if args.recursion and len(total):
         fp = total
+        total = []
         print(
             colored(
                 "[*] Starting a new discovery process with found subdomains",
