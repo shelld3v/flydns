@@ -204,7 +204,7 @@ def dns_resolve(args, q, target, resolved_out):
     progress += 1
     lock.release()
 
-    if not args.quiet and progress % 600 == 0:
+    if not args.quiet and progress % 500 == 0:
         lock.acquire()
         left = linecount-progress
         secondspassed = (int(time.time())-starttime)+1
@@ -460,8 +460,8 @@ def main():
     parser.add_argument("-e", "--ignore-existing",
                         help="Ignore existing domains in file", action="store_true")
     parser.add_argument("-d", "--dnsserver",
-                        help="IP address of resolver to use (Default: 8.8.8.8)",
-                        default="8.8.8.8")
+                        help="IP address of resolver to use (Default: 1.1.1.1)",
+                        default="1.1.1.1")
     parser.add_argument("-f", "--file",
                         help="File to save resolved altered subdomains to",
                         required=True)
@@ -471,8 +471,8 @@ def main():
     parser.add_argument("-W", "--whois",
                         help="Whois lookup to get more information", action="store_true")
     parser.add_argument("-t", "--threads",
-                        help="Amount of threads to run simultaneously (Default: 100)",
-                        required=False, default="100")
+                        help="Amount of threads to run simultaneously (Default: 50)",
+                        required=False, default="50")
     parser.add_argument("-q", "--quiet",
                         help="Quiet mode", action="store_true")
 
