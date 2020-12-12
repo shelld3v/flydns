@@ -23,7 +23,7 @@ logging.basicConfig(level=logging.CRITICAL)
 filterwarnings(action="ignore")
 
 banner =  colored("="*70 + "\n", "blue")
-banner += colored("Flydns v0.2                         https://github.com/shelld3v/flydns\n", "cyan")
+banner += colored("FlyDNS v0.2                         https://github.com/shelld3v/flydns\n", "cyan")
 banner += colored("="*70, "blue")
 
 def get_alteration_words(wordlist_fname):
@@ -217,9 +217,6 @@ def dns_resolve(args, q, target, resolved_out):
     try:
         for rdata in resolver.query(final_hostname, 'CNAME'):
             result.append(rdata.target)
-            record = "CNAME"
-    except dns.resolver.NXDOMAIN:
-        return
     except:
         pass
 
@@ -236,8 +233,6 @@ def dns_resolve(args, q, target, resolved_out):
                 result = list()
                 result.append(final_hostname)
                 result.append(A)
-            record = "A"
-
         except:
             pass
 
@@ -279,7 +274,7 @@ def dns_resolve(args, q, target, resolved_out):
                 "red") +
             " : " +
             colored(
-                "{0} {1}".format(record, result[1]),
+                result[1],
                 "green"),
             end="")
 
@@ -290,7 +285,7 @@ def dns_resolve(args, q, target, resolved_out):
                     "red") +
                 " : " +
                 colored(
-                    "{0} {1}".format(record, result[1]),
+                    result[1],
                     "green") +
                 ": " +
                 colored(
@@ -350,7 +345,7 @@ def main():
 
     q = Queue()
 
-    parser = argparse.ArgumentParser(description="Flydns v0.2")
+    parser = argparse.ArgumentParser(description="FlyDNS v0.2")
     parser.add_argument("-s", "--subdomains",
                         help="Subdomains (separated by ',')", required=False)
     parser.add_argument("-i", "--input",
@@ -454,7 +449,7 @@ def main():
                     threadhandler.pop().join()
             except KeyboardInterrupt:
                 print(
-                    colored("[!] Keyboard Interrupted", "red")
+                    colored("Keyboard Interrupted", "red")
                 )
                 threading.Event().set()
                 exit(0)
@@ -468,16 +463,16 @@ def main():
             t.start()
         except Exception as error:
             print(
-                colored("[!] Error: {0}".format(error), "red")
+                colored("Error: {0}".format(error), "red")
             )
 
-    # wait for threads
+    # wait for final threads
     try:
         while len(threadhandler) > 0:
             threadhandler.pop().join()
     except KeyboardInterrupt:
             print(
-                colored("[!] Keyboard Interrupted", "red")
+                colored("Keyboard Interrupted", "red")
             )
             threading.Event().set()
             exit(0)
