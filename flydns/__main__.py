@@ -21,11 +21,6 @@ from warnings import filterwarnings
 logging.basicConfig(level=logging.CRITICAL)
 filterwarnings(action="ignore")
 
-banner =  colored("="*70 + "\n", "blue")
-banner += colored("FlyDNS v0.3                         https://github.com/shelld3v/flydns\n", "cyan")
-banner += colored("="*70, "blue")
-
-
 
 def get_alteration_words(wordlist_fname):
     with open(wordlist_fname, "r") as f:
@@ -507,9 +502,6 @@ def main():
         raise SystemExit
 
     exclude = args.exclude.strip().split(",")
-
-    if not args.quiet:
-        print(banner)
 
     start(args)
 
