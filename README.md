@@ -25,8 +25,9 @@ pip install .
 |  -f  | Output of resolved subdomains.
 |  -t  | How many threads the resolver will use simultaneously
 |  -r  | Perform discovery recursively
-|  -d  | System DNS resolver
-|  -e  | Exclude subdomains by CNAME and IPs
+|  -d  | System DNS resolvers
+|  -e  | Exclude subdomains by DNS answers
+|  -R  | DNS lookup for IP addresses
 |  -p  | Ports to scan
 |  -a  | Look for only active subdomains
 |  -n  | Add number suffix to every domain (0-9)
