@@ -438,7 +438,7 @@ def main():
     global total
     global exclude
 
-    parser = argparse.ArgumentParser(description="FlyDNS v0.3")
+    parser = argparse.ArgumentParser(description="FlyDNS v0.4")
     parser.add_argument("-s", "--subdomains",
                         help="Subdomains (separated by commas)", required=False)
     parser.add_argument("-i", "--input",
