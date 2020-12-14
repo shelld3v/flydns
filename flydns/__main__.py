@@ -227,7 +227,11 @@ def dns_resolve(args, q, target, resolved_out):
             if len(A) > 0 and len(result) == 1:
                 result = list()
                 result.append(final_hostname)
-                result.append(str(A[0]))
+                if args.rdns:
+                    rDNS = socket.gethostbyaddr(str(A[0]))
+                    result.append(rDNS[0])
+                else:
+                    result.append(str(A[0]))
         except:
             pass
 
@@ -464,6 +468,8 @@ def main():
     parser.add_argument("-a", "--active",
                         help="Look for only active subdomains",
                         action="store_true")
+    parser.add_argument("-R", "--rdns",
+                        help="Perform reverse DNS lookup", required=False)
     parser.add_argument("-n", "--add-number-suffix",
                         help="Add number suffix to every domain (0-9)",
                         action="store_true")
