@@ -469,7 +469,7 @@ def main():
                         help="Look for only active subdomains",
                         action="store_true")
     parser.add_argument("-R", "--rdns",
-                        help="Perform reverse DNS lookup", required=False)
+                        help="Perform reverse DNS lookup", action="store_true")
     parser.add_argument("-n", "--add-number-suffix",
                         help="Add number suffix to every domain (0-9)",
                         action="store_true")
