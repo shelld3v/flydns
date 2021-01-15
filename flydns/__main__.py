@@ -193,12 +193,14 @@ def dns_resolve(args, q, target, resolved_out):
     global starttime
     global found
     global total
+    global time
+    global lasttime
 
     lock.acquire()
     progress += 1
     lock.release()
 
-    if not args.quiet and progress % 700 == 0:
+    if not args.quiet and (time.time() - lasttime) > 2:
         lock.acquire()
         left = linecount-progress
         secondspassed = (int(time.time())-starttime)+1
@@ -207,9 +209,11 @@ def dns_resolve(args, q, target, resolved_out):
         seconds = 0 if amountpersecond == 0 else int(left/amountpersecond)
         timeleft = str(datetime.timedelta(seconds=seconds))
         print(
-            colored("[*] Progress: {0:.2f}%, approximate {1} left".format((progress/linecount) * 100, timeleft),
-                    "blue")
+            colored("[*] Progress: {0:.2f}%, queried: {1}; ETA: {2}".format((progress/linecount) * 100, progress, timeleft),
+                    "blue"),
+            end="\r"
         )
+        lasttime = time.time()
 
     final_hostname = target
     result = list()
@@ -268,39 +272,16 @@ def dns_resolve(args, q, target, resolved_out):
             except:
                 pass
 
-        print(
-            colored(
-                result[0],
-                "red") +
-            " : " +
-            colored(
-                result[1],
-                "green"),
-            end="")
+        msg = colored(result[0],"red") + " : " + colored(result[1],"green")
 
         if len(result) > 2 and result[2]:
-            print(
-                colored(
-                    result[0],
-                    "red") +
-                " : " +
-                colored(
-                    result[1],
-                    "green") +
-                ": " +
-                colored(
-                    result[2],
-                    "magenta"),
-                end="")
+            msg += colored(result[0],"red") + " : " + colored(result[1],"green") + ": " + colored(result[2],"magenta")
 
         if ports:
-            print(
-                colored(
-                    " (" + ", ".join(ports) + ")",
-                    "yellow")
-            )
-        else:
-            print()
+            msg += colored(" (" + ", ".join(ports) + ")","yellow")
+
+        print(" "*53, end="\r")
+        print(msg)
 
         if info:
             try:
@@ -392,6 +373,7 @@ def start(args):
                 while len(threadhandler) > 5:
                     threadhandler.pop().join()
             except KeyboardInterrupt:
+                print(" "*53, end="\r")
                 print(
                     colored("Keyboard Interrupted", "red")
                 )
@@ -424,6 +406,7 @@ def start(args):
     if args.recursion and len(total):
         fp = total
         total = []
+        print(" "*53, end="\r")
         print(
             colored(
                 "[*] Starting a new discovery process with found subdomains",
@@ -437,6 +420,7 @@ def main():
     global resolved_out
     global total
     global exclude
+    global lasttime
 
     parser = argparse.ArgumentParser(description="FlyDNS v0.4")
     parser.add_argument("-s", "--subdomains",
@@ -450,8 +434,8 @@ def main():
                         help="List of words to alter the subdomains with",
                         required=False, default="words.txt")
     parser.add_argument("-d", "--dnsservers",
-                        help="IP addresses of resolvers to use, separated by commas (Default: 1.1.1.1)",
-                        default="1.1.1.1")
+                        help="IP addresses of resolvers to use, separated by commas (Default: 1.1.1.1,1.0.0.1,8.8.8.8,8.8.4.4)",
+                        default="1.1.1.1,1.0.0.1,8.8.8.8,8.8.4.4")
     parser.add_argument("-f", "--file",
                         help="File to save resolved altered subdomains to",
                         required=True)
@@ -509,10 +493,12 @@ def main():
 
     exclude = args.exclude.strip().split(",")
 
+    lasttime = time.time()
     start(args)
 
     if not args.quiet:
         timetaken = str(datetime.timedelta(seconds=(int(time.time())-starttime)))
+        print(" "*53, end="\r")
         print(
             colored("[*] Completed in {0}".format(timetaken),
                 "blue")
@@ -520,3 +506,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
