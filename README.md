@@ -27,7 +27,7 @@ pip3 install .
 |  -r  | Perform discovery recursively
 |  -d  | System DNS resolvers
 |  -e  | Exclude subdomains by DNS answers
-|  -R  | DNS lookup for IP addresses
+|  -R  | Reverse DNS lookup for IP addresses
 |  -p  | Ports to scan
 |  -a  | Look for only active subdomains
 |  -n  | Add number suffix to every domain (0-9)
