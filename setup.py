@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="flydns",
-    version="0.3",
+    version="0.4",
     author="Pham Sy Minh",
     author_email="phamminh0227@gmail.com",
     description="Find related subdomains from subdomains",
