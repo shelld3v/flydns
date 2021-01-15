@@ -11,7 +11,7 @@ FlyDNS will try to find related subdomains from user given subdomains, by genera
 ```
 git clone https://github.com/shelld3v/flydns.git
 cd flydns
-pip install .
+pip3 install .
 ```
 
 ## Usage
