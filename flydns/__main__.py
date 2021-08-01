@@ -286,7 +286,7 @@ def dns_resolve(args, q, target, resolved_out):
         if ports:
             msg += colored(" (" + ", ".join(ports) + ")","yellow")
 
-        print(" "*53, end="\r")
+        print(" "*59, end="\r")
         print(msg)
 
         if info:
