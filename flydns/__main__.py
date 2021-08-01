@@ -286,7 +286,7 @@ def dns_resolve(args, q, target, resolved_out):
         if ports:
             msg += colored(" (" + ", ".join(ports) + ")","yellow")
 
-        print(" "*59, end="\r")
+        print(" "*60, end="\r")
         print(msg)
 
         if info:
@@ -379,7 +379,7 @@ def start(args):
                 while len(threadhandler) > 5:
                     threadhandler.pop().join()
             except KeyboardInterrupt:
-                print(" "*53, end="\r")
+                print(" "*60, end="\r")
                 print(
                     colored("Keyboard Interrupted", "red")
                 )
@@ -412,7 +412,7 @@ def start(args):
     if args.recursion and len(total):
         fp = total
         total = []
-        print(" "*53, end="\r")
+        print(" "*60, end="\r")
         print(
             colored(
                 "[*] Starting a new discovery process with found subdomains",
@@ -507,7 +507,7 @@ def main():
 
     if not args.quiet:
         timetaken = str(datetime.timedelta(seconds=(int(time.time())-starttime)))
-        print(" "*53, end="\r")
+        print(" "*60, end="\r")
         print(
             colored("[*] Completed in {0}".format(timetaken),
                 "blue")
