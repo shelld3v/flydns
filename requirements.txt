@@ -2,4 +2,5 @@ tldextract
 argparse
 termcolor
 dnspython
+requests
 ipwhois
