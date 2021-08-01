@@ -6,6 +6,7 @@ import threading
 import time
 import datetime
 import socket
+import requests
 from threading import Lock
 from queue import Queue as Queue
 
@@ -241,6 +242,11 @@ def dns_resolve(args, q, target, resolved_out):
 
     # will always have 1 item (target)
     if len(result) > 1 and str(result[1]) not in exclude:
+        # Submit hostname to AnubisDB (https://github.com/jonluca/Anubis-DB) for community support <3
+        if not args.no_sharing:
+            domain = ".".join(str(result[0]).split(".")[-2:])
+            requests.post("https://jonlu.ca/anubis/subdomains/" + domain,
+                          data={"subdomains": '["%s"]' % str(result[0])})
         if str(result[1]) in found:
             if found[str(result[1])] > 3:
                 return
@@ -462,6 +468,9 @@ def main():
                         required=False, default="50")
     parser.add_argument("-I", "--ignore-existing",
                         help="Ignore existing domains in file",
+                        action="store_true")
+    parser.add_argument("-N", "--no-sharing",
+                        help="Do not share results to AnubisDB (Flydns submits results to AnubisDB for community support)",
                         action="store_true")
     parser.add_argument("-q", "--quiet",
                         help="Quiet mode", action="store_true")
