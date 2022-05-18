@@ -246,7 +246,7 @@ def dns_resolve(args, q, target, resolved_out):
         if not args.no_sharing:
             domain = ".".join(str(result[0]).split(".")[-2:])
             requests.post("https://jonlu.ca/anubis/subdomains/" + domain,
-                          data={"subdomains": '["%s"]' % str(result[0])})
+                          json={"subdomains": [result[0]]})
         if str(result[1]) in found:
             if found[str(result[1])] > 3:
                 return
